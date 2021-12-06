@@ -38,7 +38,7 @@
         padding: 1vw;
         padding-bottom: 0.75vw;
         background: linear-gradient(45deg, #0cebeb, #29ffc6);
-        border-radius: 2vw;
+        border-radius: 0.5vw;
         box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         width: 10vw;
         border: 1px solid #8b8b8b;

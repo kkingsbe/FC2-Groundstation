@@ -49,7 +49,6 @@
                 }
             ]
         }   
-    
 </script>
 
 <chart>
@@ -61,8 +60,9 @@
 <style>
     .container {
         width: 33vw;
-        background: white;
         margin-top: 2vw;
         padding: 0.5vw;
+        background: white;
+        border-radius: 0.5vw;
     }
 </style>

@@ -64,7 +64,7 @@
 		height: 100%;
 		display: flex;
 		flex-direction: column;
-		background: rgb(245, 245, 245);
+		background: rgb(35, 30, 56);
 		overflow-y: hidden;
 	}
 
@@ -80,7 +80,7 @@
 		height: 100%;
 		display: flex;
 		flex-direction: column;
-		background: white;
+		background: rgb(36, 31, 54);
         box-shadow: 4px 0px 8px rgba(0, 0, 0, 0.3);
 		padding-top: 1vw;
 	}

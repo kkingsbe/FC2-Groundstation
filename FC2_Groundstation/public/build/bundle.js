@@ -13867,9 +13867,9 @@ var app = (function () {
     			chart = element("chart");
     			div = element("div");
     			create_component(line.$$.fragment);
-    			attr_dev(div, "class", "container svelte-1w5q1qb");
-    			add_location(div, file$2, 55, 4, 1435);
-    			add_location(chart, file$2, 54, 0, 1422);
+    			attr_dev(div, "class", "container svelte-jdc3ze");
+    			add_location(div, file$2, 54, 4, 1429);
+    			add_location(chart, file$2, 53, 0, 1416);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -14742,18 +14742,18 @@ var app = (function () {
     			p3 = element("p");
     			p3.textContent = "Arm";
     			add_location(p0, file$5, 28, 8, 732);
-    			attr_dev(div0, "class", div0_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[1]) + " svelte-zos4lv"));
+    			attr_dev(div0, "class", div0_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[1]) + " svelte-3xd1xe"));
     			add_location(div0, file$5, 27, 4, 670);
     			add_location(p1, file$5, 31, 8, 812);
-    			attr_dev(div1, "class", "btn callib-gyro svelte-zos4lv");
+    			attr_dev(div1, "class", "btn callib-gyro svelte-3xd1xe");
     			add_location(div1, file$5, 30, 4, 773);
     			add_location(p2, file$5, 34, 8, 887);
-    			attr_dev(div2, "class", "btn fintest svelte-zos4lv");
+    			attr_dev(div2, "class", "btn fintest svelte-3xd1xe");
     			add_location(div2, file$5, 33, 4, 852);
     			add_location(p3, file$5, 37, 8, 951);
-    			attr_dev(div3, "class", "btn arm svelte-zos4lv");
+    			attr_dev(div3, "class", "btn arm svelte-3xd1xe");
     			add_location(div3, file$5, 36, 4, 920);
-    			attr_dev(controls, "class", "svelte-zos4lv");
+    			attr_dev(controls, "class", "svelte-3xd1xe");
     			add_location(controls, file$5, 26, 0, 654);
     		},
     		l: function claim(nodes) {
@@ -14778,7 +14778,7 @@ var app = (function () {
     		p: function update(ctx, [dirty]) {
     			if (dirty & /*connectBtnText*/ 1) set_data_dev(t0, /*connectBtnText*/ ctx[0]);
 
-    			if (dirty & /*connectBtnClass*/ 2 && div0_class_value !== (div0_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[1]) + " svelte-zos4lv"))) {
+    			if (dirty & /*connectBtnClass*/ 2 && div0_class_value !== (div0_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[1]) + " svelte-3xd1xe"))) {
     				attr_dev(div0, "class", div0_class_value);
     			}
     		},
@@ -14954,31 +14954,31 @@ var app = (function () {
     			t13 = space();
     			p7 = element("p");
     			t14 = text(t14_value);
-    			attr_dev(p0, "class", "title svelte-jyvdja");
+    			attr_dev(p0, "class", "title svelte-wqxxt3");
     			add_location(p0, file$6, 7, 12, 118);
-    			attr_dev(p1, "class", "value svelte-jyvdja");
+    			attr_dev(p1, "class", "value svelte-wqxxt3");
     			add_location(p1, file$6, 8, 12, 162);
-    			attr_dev(div0, "class", "item svelte-jyvdja");
+    			attr_dev(div0, "class", "item svelte-wqxxt3");
     			add_location(div0, file$6, 6, 8, 86);
-    			attr_dev(p2, "class", "title svelte-jyvdja");
+    			attr_dev(p2, "class", "title svelte-wqxxt3");
     			add_location(p2, file$6, 11, 12, 256);
-    			attr_dev(p3, "class", "value svelte-jyvdja");
+    			attr_dev(p3, "class", "value svelte-wqxxt3");
     			add_location(p3, file$6, 12, 12, 306);
-    			attr_dev(div1, "class", "item svelte-jyvdja");
+    			attr_dev(div1, "class", "item svelte-wqxxt3");
     			add_location(div1, file$6, 10, 8, 224);
-    			attr_dev(p4, "class", "title svelte-jyvdja");
+    			attr_dev(p4, "class", "title svelte-wqxxt3");
     			add_location(p4, file$6, 15, 12, 406);
-    			attr_dev(p5, "class", "value svelte-jyvdja");
+    			attr_dev(p5, "class", "value svelte-wqxxt3");
     			add_location(p5, file$6, 16, 12, 453);
-    			attr_dev(div2, "class", "item svelte-jyvdja");
+    			attr_dev(div2, "class", "item svelte-wqxxt3");
     			add_location(div2, file$6, 14, 8, 374);
-    			attr_dev(p6, "class", "title svelte-jyvdja");
+    			attr_dev(p6, "class", "title svelte-wqxxt3");
     			add_location(p6, file$6, 19, 12, 550);
-    			attr_dev(p7, "class", "value svelte-jyvdja");
+    			attr_dev(p7, "class", "value svelte-wqxxt3");
     			add_location(p7, file$6, 20, 12, 590);
-    			attr_dev(div3, "class", "item svelte-jyvdja");
+    			attr_dev(div3, "class", "item svelte-wqxxt3");
     			add_location(div3, file$6, 18, 8, 518);
-    			attr_dev(div4, "class", "row svelte-jyvdja");
+    			attr_dev(div4, "class", "row svelte-wqxxt3");
     			add_location(div4, file$6, 5, 4, 59);
     			add_location(datarow, file$6, 4, 0, 44);
     		},
@@ -15305,13 +15305,13 @@ var app = (function () {
     			create_component(data_1.$$.fragment);
     			t2 = space();
     			create_component(graphs.$$.fragment);
-    			attr_dev(div0, "class", "left svelte-1hg59zi");
+    			attr_dev(div0, "class", "left svelte-frqnkq");
     			add_location(div0, file$8, 47, 2, 1249);
-    			attr_dev(div1, "class", "right svelte-1hg59zi");
+    			attr_dev(div1, "class", "right svelte-frqnkq");
     			add_location(div1, file$8, 50, 2, 1348);
-    			attr_dev(div2, "class", "cont svelte-1hg59zi");
+    			attr_dev(div2, "class", "cont svelte-frqnkq");
     			add_location(div2, file$8, 46, 1, 1227);
-    			attr_dev(main, "class", "svelte-1hg59zi");
+    			attr_dev(main, "class", "svelte-frqnkq");
     			add_location(main, file$8, 44, 0, 1184);
     		},
     		l: function claim(nodes) {

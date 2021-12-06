@@ -64,7 +64,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid #8b8b8b;
         box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         color: white;
         cursor: pointer;
@@ -72,7 +71,7 @@
     }
 
     .connect {
-        background: #49E27C;
+        background: #2bcc61;
     }
 
     .disconnect {
@@ -80,14 +79,14 @@
     }
 
     .callib-gyro {
-        background: #49b7e2;
+        background: linear-gradient(45deg, #7F00FF, #E100FF);
     }
 
     .fintest {
-        background: #49b7e2;
+        background: linear-gradient(45deg, #7F00FF, #E100FF);
     }
 
     .arm {
-        background: #e28149;
+        background: linear-gradient(45deg, #7F00FF, #E100FF);
     }
 </style>
