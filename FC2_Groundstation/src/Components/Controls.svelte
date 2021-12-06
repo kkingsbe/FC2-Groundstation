@@ -1,13 +1,42 @@
 <script>
-    async function startRadio() {
+    export let connectedToRadio
+    var connectBtnText = "Connect"
+    var connectBtnClass = "btn connect"
+
+    $:if(connectedToRadio) {
+        connectBtnText = "Disconnect"
+        connectBtnClass = "btn disconnect"
+    } else {
+        connectBtnText = "Connect"
+        connectBtnClass = "btn connect"
+    }
+
+
+    function toggleRadio() {
+        if(!connectedToRadio) {
+            connectedToRadio = true
+            window.api.send("toMain", {command: "startRadio"});
+        } else {
+            connectedToRadio = false
+            window.api.send("toMain", {command: "endRadio"});
+        }
 
     }
 </script>
 
 <controls>
     <p class="title">Controls:</p>
-    <div class="connect" on:click={startRadio}>
-        <p>Connect</p>
+    <div class={connectBtnClass} on:click={toggleRadio}>
+        <p>{connectBtnText}</p>
+    </div>
+    <div class="btn callib-gyro">
+        <p>Callibrate Gyro</p>
+    </div>
+    <div class="btn fintest">
+        <p>Fin Test</p>
+    </div>
+    <div class="btn arm">
+        <p>Arm</p>
     </div>
 </controls>
 
@@ -26,8 +55,7 @@
         padding: 0px;
     }
 
-    .connect {
-        background: #49E27C;
+    .btn {
         width: 10vw;
         height: 3vw;
         font-size: 1.5vw;
@@ -39,5 +67,26 @@
         box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         color: white;
         cursor: pointer;
+        margin-bottom: 1vw;
+    }
+
+    .connect {
+        background: #49E27C;
+    }
+
+    .disconnect {
+        background: #e24949;
+    }
+
+    .callib-gyro {
+        background: #49b7e2;
+    }
+
+    .fintest {
+        background: #49b7e2;
+    }
+
+    .arm {
+        background: #e28149;
     }
 </style>

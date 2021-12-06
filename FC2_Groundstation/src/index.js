@@ -1,5 +1,8 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const radio = require(path.join(__dirname, "radio.js"))
+
+let mainWindow
 
 // Live Reload
 require('electron-reload')(__dirname, {
@@ -13,13 +16,15 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-const createWindow = () => {
+async function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, "preload.js") // use a preload script
     }
   });
 
@@ -28,7 +33,7 @@ const createWindow = () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
-};
+}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -44,6 +49,12 @@ app.on('window-all-closed', () => {
   }
 });
 
+app.on("before-quit", async(event) => {
+  event.preventDefault()
+  console.log("Closing radio connection")
+  radio.end()
+})
+
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
@@ -52,5 +63,24 @@ app.on('activate', () => {
   }
 });
 
+
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+ipcMain.on("toMain", (event, args) => {
+  var response
+  switch(args.command) {
+      case "readData":
+        response = {
+          command: "data",
+          data: radio.readData()
+        }
+        break
+      case "startRadio":
+        radio.start("COM25")
+        break
+      case "endRadio":
+        radio.end()
+        break
+  }
+  mainWindow.webContents.send("fromMain", response);
+})
