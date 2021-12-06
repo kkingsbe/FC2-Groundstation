@@ -11,6 +11,11 @@
     var datapoints = []
     var data
 
+    for(let i = 0; i < 100; i++) {
+        labels.push(i)
+        datapoints.push(Math.random() * 20 + 50)
+    }
+
     //$: console.log(rocketData)
     $: updateGraph(rocketData)
 
@@ -55,7 +60,7 @@
 
 <style>
     .container {
-        width: 30vw;
+        width: 33vw;
         background: white;
         margin-top: 2vw;
         padding: 0.5vw;

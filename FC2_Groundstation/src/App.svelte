@@ -1,7 +1,7 @@
 <script>
 	export let name;
 	import StateDisp from "./Components/StateDisp.svelte"
-	import BottomGraphs from "./Components/BottomGraphs.svelte"
+	import Graphs from "./Components/Graphs.svelte"
 	import MainChart from "./Components/MainChart.svelte"
 	import Controls from "./components/Controls.svelte"
 	import Data from "./components/Data.svelte"
@@ -44,16 +44,15 @@
 
 <main>
 	<StateDisp {state}></StateDisp>
-	<div class="top">
+	<div class="cont">
 		<div class="left">
 			<Controls bind:connectedToRadio={connectedToRadio}></Controls>
-			<Data bind:data = {data}></Data>
 		</div>
 		<div class="right">
-			<MainChart title={"Roll Rate"} color={[182,40,240]} bind:rocketData={dataOverTime} bind:dataWindow={maxDataPoints}></MainChart>
+			<Data bind:data = {data}></Data>
+			<Graphs bind:rocketData={dataOverTime} bind:dataWindow={maxDataPoints}></Graphs>
 		</div>
 	</div>
-	<BottomGraphs bind:rocketData={dataOverTime} bind:dataWindow={maxDataPoints}></BottomGraphs>
 </main>
 
 <style>
@@ -65,27 +64,31 @@
 		height: 100%;
 		display: flex;
 		flex-direction: column;
-		background: white;
+		background: rgb(245, 245, 245);
+		overflow-y: hidden;
 	}
 
-	.top {
+	.cont {
 		width: 100%;
+		height: 100%;
 		display: flex;
 		flex-direction: row;
 	}
 
 	.left {
-		width: 50vw;
-		border-right: 3px solid gray;
-		border-bottom: 3px solid gray;
-		border-bottom-right-radius: 1vw;
+		width: 20vw;
+		height: 100%;
 		display: flex;
-		flex-direction: row;
-		justify-content: space-evenly;
+		flex-direction: column;
+		background: white;
+        box-shadow: 4px 0px 8px rgba(0, 0, 0, 0.3);
+		padding-top: 1vw;
 	}
 
 	.right {
-		width: 50vw;
+		width: 100%;
 		padding: 1vw;
+		display: flex;
+		flex-direction: column;
 	}
 </style>

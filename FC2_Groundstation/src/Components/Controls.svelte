@@ -25,7 +25,6 @@
 </script>
 
 <controls>
-    <p class="title">Controls:</p>
     <div class={connectBtnClass} on:click={toggleRadio}>
         <p>{connectBtnText}</p>
     </div>
@@ -45,6 +44,8 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: space-evenly;
+        height: 50%;
     }
 
     .title {

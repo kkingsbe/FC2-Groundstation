@@ -46,7 +46,7 @@ const readData = () => {
         let time = dat.split(",")[5]
         let signalStrength = dat.split(",")[6]
 
-        console.log(`Roll Rate: ${rollRate} | Angle: ${angle} | Fin Setpoint: ${finSetpoint} | Time: ${time} | Signal Strength: ${signalStrength}`)
+        //console.log(`Roll Rate: ${rollRate} | Angle: ${angle} | Fin Setpoint: ${finSetpoint} | Time: ${time} | Signal Strength: ${signalStrength}`)
         if(typeof(rollRate) !== "undefined" && rollRate.includes(".") && angle.includes(".") && finSetpoint.includes(".") && time.includes(".")) {
             return dat
         } else {

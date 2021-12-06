@@ -1,11 +1,11 @@
 <script>
-    import DataTable from "./DataTable.svelte"
+    import DataRow from "./DataRow.svelte"
     export let data
 </script>
 
 <data>
-    <p class="title">Data:</p>
-    <DataTable bind:data={data}></DataTable>
+    <!--p class="title">Data:</p-->
+    <DataRow bind:data={data}></DataRow>
 </data>
 
 <style>
