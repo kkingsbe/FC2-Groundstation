@@ -5,7 +5,7 @@ slated to fly on my "K-2" rocket, which will be a midpower rocket featuring 2 ac
 ![Groundstation](https://github.com/kkingsbe/FC2-Groundstation/blob/master/Images/Groundstation.png)
 
 </br></br>
-The features within this application include:
+## The features within this application include:
 - Opening LoRa communication with FC2
 - Initiating gyro callibration
 - Arming for launch
@@ -13,16 +13,16 @@ The features within this application include:
 - Recieving "live" telemetry from FC2
 
 </br></br>
-FC2 live telemetry channels include:
+## FC2 live telemetry channels include:
 - Roll rate (deg/s)
 - Roll angle (deg)
 - Actuated fin setpoint (deg)
 - Signal strength (Db)
 
 </br></br>
-Flight Computer 2:
+## Flight Computer 2:
 ![FC2](https://github.com/kkingsbe/FC2-Groundstation/blob/master/Images/A545DF97-F09B-425B-B1FD-B88CD3748D36.jpg)
 
 </br></br>
-Circuit Diagram of Flight Computer 2:</br>
+## Circuit Diagram of Flight Computer 2:</br>
 ![Diagram](https://github.com/kkingsbe/FC2-Groundstation/blob/master/Images/circuit.png)
