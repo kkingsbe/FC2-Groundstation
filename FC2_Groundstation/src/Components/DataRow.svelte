@@ -6,19 +6,19 @@
     <div class="row">
         <div class="item">
             <p class="title">Roll Rate</p>
-            <p class="value">{data.rollRate}</p>
+            <p class="value">{data.rollRate} deg/sec</p>
         </div>
         <div class="item">
             <p class="title">Signal Strength</p>
-            <p class="value">{data.signalStrength}</p>
+            <p class="value">{data.signalStrength} Db</p>
         </div>
         <div class="item">
             <p class="title">Fin Setpoint</p>
-            <p class="value">{data.finSetpoint}</p>
+            <p class="value">{data.finSetpoint} deg</p>
         </div>
         <div class="item">
             <p class="title">Angle</p>
-            <p class="value">{data.angle}</p>
+            <p class="value">{data.angle} deg</p>
         </div>
     </div>
 </datarow>

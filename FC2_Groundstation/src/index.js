@@ -78,6 +78,13 @@ ipcMain.on("toMain", (event, args) => {
       case "startRadio":
         radio.start("COM25")
         break
+      case "getOffsets":
+        radio.writeData("#getOffsets")
+        break;
+      case "setOffset":
+        console.log(args.data)
+        radio.writeData(args.data)
+        break;
       case "endRadio":
         radio.end()
         break

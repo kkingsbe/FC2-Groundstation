@@ -1,6 +1,6 @@
 const SerialPort = require("serialport")
 
-const startupCode = "AT+ADDRESS=1\r\nAT+PARAMETER=12,7,2,4"
+const startupCode = "AT+ADDRESS=1\r\nAT+PARAMETER=12,2,2,4"
 var dataToParse = []
 var lastLine = ""
 var serialport
@@ -39,19 +39,43 @@ const start = (port) => {
 const readData = () => {
     if(dataToParse.length > 0) { 
         let dat = dataToParse.shift()
-        
-        let rollRate = dat.split(",")[2]
-        let angle = dat.split(",")[3]
-        let finSetpoint = dat.split(",")[4]
-        let time = dat.split(",")[5]
-        let signalStrength = dat.split(",")[6]
-
-        //console.log(`Roll Rate: ${rollRate} | Angle: ${angle} | Fin Setpoint: ${finSetpoint} | Time: ${time} | Signal Strength: ${signalStrength}`)
-        if(typeof(rollRate) !== "undefined" && rollRate.includes(".") && angle.includes(".") && finSetpoint.includes(".") && time.includes(".")) {
-            return dat
+        console.log(dat)
+        if(dat.includes("#") && (dat.split(",")[2]).startsWith("#")) {
+            //Command given
+            let temp = ((dat.split("#")[1]).split(",").slice(0,dat.split(",").length-4)).join(",").trim()
+            console.log(temp)
+            return temp
         } else {
-            return readData() //Read another line if current isnt valid
-        } 
+            //Rocket state data given
+            let rollRate = dat.split(",")[2]
+            let angle = dat.split(",")[3]
+            let finSetpoint = dat.split(",")[4]
+            let time = dat.split(",")[5]
+            let signalStrength = dat.split(",")[6]
+    
+            //console.log(`Roll Rate: ${rollRate} | Angle: ${angle} | Fin Setpoint: ${finSetpoint} | Time: ${time} | Signal Strength: ${signalStrength}`)
+            try {
+                if(typeof(rollRate) !== "undefined" && rollRate.includes(".") && angle.includes(".") && finSetpoint.includes(".") && time.includes(".")) {
+                    return dat
+                } else {
+                    return readData() //Read another line if current isnt valid
+                } 
+            } catch(e) {
+                console.log(e)
+            }
+        }
+    }
+}
+
+const writeData = (data) => {
+    if(portOpen) {
+        var msg = `AT+SEND=1,${data.length},${data}\r\n`
+        console.log(`Sending Message: ${msg}`)
+        serialport.write(msg, function(err) {
+            if(typeof(err) !== "undefined") {
+                console.log("Error: " + err)
+            }
+        })
     }
 }
 
@@ -64,4 +88,5 @@ const end = () => {
 
 exports.start = start
 exports.readData = readData
+exports.writeData = writeData
 exports.end = end

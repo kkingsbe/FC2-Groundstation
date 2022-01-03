@@ -1,7 +1,15 @@
 <script>
     export let connectedToRadio
+    export let offsetL
+    export let offsetR
+
+    var awaitingOffsets = false
+
+    import FinOffsetModal from "./FinOffsetModal.svelte";
+
     var connectBtnText = "Connect"
     var connectBtnClass = "btn connect"
+    var modFinOffset = false
 
     $:if(connectedToRadio) {
         connectBtnText = "Disconnect"
@@ -22,6 +30,19 @@
         }
 
     }
+
+    async function getOffsets() {
+        window.api.send("toMain", {command: "getOffsets"})
+        awaitingOffsets = true
+    }
+
+    function updateOffsets() {
+        awaitingOffsets = false
+        console.log("New Offsets:")
+        console.log(`L: ${offsetL}, R: ${offsetR}`)
+    }
+
+    $:offsetL,updateOffsets()
 </script>
 
 <controls>
@@ -34,9 +55,17 @@
     <div class="btn fintest">
         <p>Fin Test</p>
     </div>
+    <div class="btn finoffset" on:click={() => {modFinOffset = true}} on:click={getOffsets}>
+        <p>Fin Offset</p>
+    </div>
     <div class="btn arm">
         <p>Arm</p>
     </div>
+    {#if modFinOffset}
+    <div class="modal">
+        <FinOffsetModal bind:modFinOffset={modFinOffset} bind:offsetL={offsetL} bind:offsetR={offsetR}></FinOffsetModal>
+    </div>
+    {/if}
 </controls>
 
 <style>
@@ -46,6 +75,14 @@
         align-items: center;
         justify-content: space-evenly;
         height: 50%;
+    }
+
+    .modal {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
     }
 
     .title {
@@ -83,6 +120,10 @@
     }
 
     .fintest {
+        background: linear-gradient(45deg, #7F00FF, #E100FF);
+    }    
+    
+    .finoffset {
         background: linear-gradient(45deg, #7F00FF, #E100FF);
     }
 

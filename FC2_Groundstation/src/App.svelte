@@ -17,19 +17,18 @@
 	var maxDataPoints = 50
 	var dataOverTime = []
 
-	window.api.receive("fromMain", (msg) => {
-		//console.log(dataOverTime)
-		if(msg.command == "data" && typeof(msg.data) !== "undefined") {
-			data.rollRate = msg.data.split(",")[2]
-			data.angle = msg.data.split(",")[3]
-			data.finSetpoint = msg.data.split(",")[4]
-			data.time = msg.data.split(",")[5]
-			data.signalStrength = msg.data.split(",")[6]
-			dataOverTime.push({...data})
-			dataOverTime = dataOverTime
-			//if(dataOverTime.length > maxDataPoints) dataOverTime.shift()
+	var offsetL = 0
+	var offsetR = 0
 
-			//console.log(dataOverTime)
+	window.api.receive("fromMain", (msg) => {
+		if(msg.command == "data") {
+			//console.log(msg)
+			if(typeof(msg.data) !== "undefined" && msg.data.split("=")[0].includes("Offsets")) {
+				offsetL = (msg.data.split("=")[1]).split(",")[0]
+				offsetR = (msg.data.split("=")[1]).split(",")[1]
+				//console.log(offsetL)
+				//console.log(offsetR)
+			}
 		}
 	});
 	
@@ -46,7 +45,7 @@
 	<StateDisp {state}></StateDisp>
 	<div class="cont">
 		<div class="left">
-			<Controls bind:connectedToRadio={connectedToRadio}></Controls>
+			<Controls bind:connectedToRadio={connectedToRadio} bind:offsetL={offsetL} bind:offsetR={offsetR}></Controls>
 		</div>
 		<div class="right">
 			<Data bind:data = {data}></Data>
