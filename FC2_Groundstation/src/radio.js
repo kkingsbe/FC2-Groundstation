@@ -5,8 +5,9 @@ var dataToParse = []
 var lastLine = ""
 var serialport
 var portOpen = false
+var port
 
-const start = (port) => {
+const start = () => {
     serialport = new SerialPort(port, {
         baudRate: 115200
     })
@@ -79,6 +80,23 @@ const writeData = (data) => {
     }
 }
 
+const getPorts = async() => {
+    var portsList = []
+    return new Promise(async (resolve, reject) => {
+        await SerialPort.list().then(ports => {
+            ports.forEach(port => {
+                console.log(port.path)
+                portsList.push(String(port.path))
+            })
+            resolve(portsList)
+        })
+    })
+}
+
+const setPort = (_port) => {
+    port = _port
+}
+
 const end = () => {
     if(portOpen) {
         serialport.close()
@@ -89,4 +107,6 @@ const end = () => {
 exports.start = start
 exports.readData = readData
 exports.writeData = writeData
+exports.getPorts = getPorts
+exports.setPort = setPort
 exports.end = end

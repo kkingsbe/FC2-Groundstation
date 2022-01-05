@@ -66,7 +66,7 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
-ipcMain.on("toMain", (event, args) => {
+ipcMain.on("toMain", async(event, args) => {
   var response
   switch(args.command) {
       case "readData":
@@ -76,7 +76,7 @@ ipcMain.on("toMain", (event, args) => {
         }
         break
       case "startRadio":
-        radio.start("COM25")
+        radio.start()
         break
       case "getOffsets":
         radio.writeData("#getOffsets")
@@ -85,6 +85,15 @@ ipcMain.on("toMain", (event, args) => {
         console.log(args.data)
         radio.writeData(args.data)
         break;
+      case "getPorts":
+        let data = await radio.getPorts()
+        response = {
+          command: "getPorts",
+          data: data
+        }
+        break
+      case "setPort":
+        radio.setPort(args.data)
       case "endRadio":
         radio.end()
         break

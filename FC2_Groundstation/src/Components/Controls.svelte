@@ -1,11 +1,12 @@
 <script>
     export let connectedToRadio
-    export let offsetL
+export let offsetL
     export let offsetR
 
     var awaitingOffsets = false
 
     import FinOffsetModal from "./FinOffsetModal.svelte";
+    import ComportSelect from "./ComPortSelect.svelte"
 
     var connectBtnText = "Connect"
     var connectBtnClass = "btn connect"
