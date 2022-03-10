@@ -15378,7 +15378,7 @@ var app = (function () {
     const { console: console_1$2 } = globals;
     const file$8 = "src\\components\\Controls.svelte";
 
-    // (65:4) {#if modFinOffset}
+    // (79:4) {#if modFinOffset}
     function create_if_block(ctx) {
     	let div;
     	let updating_modFinOffset;
@@ -15425,8 +15425,8 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			create_component(finoffsetmodal.$$.fragment);
-    			attr_dev(div, "class", "modal svelte-195s5gn");
-    			add_location(div, file$8, 65, 4, 1697);
+    			attr_dev(div, "class", "modal svelte-hlhpi0");
+    			add_location(div, file$8, 79, 4, 2054);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -15475,7 +15475,7 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(65:4) {#if modFinOffset}",
+    		source: "(79:4) {#if modFinOffset}",
     		ctx
     	});
 
@@ -15501,6 +15501,12 @@ var app = (function () {
     	let div4;
     	let p4;
     	let t9;
+    	let div5;
+    	let p5;
+    	let t11;
+    	let div6;
+    	let p6;
+    	let t13;
     	let current;
     	let dispose;
     	let if_block = /*modFinOffset*/ ctx[4] && create_if_block(ctx);
@@ -15526,26 +15532,40 @@ var app = (function () {
     			t7 = space();
     			div4 = element("div");
     			p4 = element("p");
-    			p4.textContent = "Arm";
+    			p4.textContent = "Begin Test";
     			t9 = space();
+    			div5 = element("div");
+    			p5 = element("p");
+    			p5.textContent = "Reset";
+    			t11 = space();
+    			div6 = element("div");
+    			p6 = element("p");
+    			p6.textContent = "Arm";
+    			t13 = space();
     			if (if_block) if_block.c();
-    			add_location(p0, file$8, 50, 8, 1293);
-    			attr_dev(div0, "class", div0_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[3]) + " svelte-195s5gn"));
-    			add_location(div0, file$8, 49, 4, 1231);
-    			add_location(p1, file$8, 53, 8, 1373);
-    			attr_dev(div1, "class", "btn callib-gyro svelte-195s5gn");
-    			add_location(div1, file$8, 52, 4, 1334);
-    			add_location(p2, file$8, 56, 8, 1448);
-    			attr_dev(div2, "class", "btn fintest svelte-195s5gn");
-    			add_location(div2, file$8, 55, 4, 1413);
-    			add_location(p3, file$8, 59, 8, 1579);
-    			attr_dev(div3, "class", "btn finoffset svelte-195s5gn");
-    			add_location(div3, file$8, 58, 4, 1481);
-    			add_location(p4, file$8, 62, 8, 1645);
-    			attr_dev(div4, "class", "btn arm svelte-195s5gn");
-    			add_location(div4, file$8, 61, 4, 1614);
-    			attr_dev(controls, "class", "svelte-195s5gn");
-    			add_location(controls, file$8, 48, 0, 1215);
+    			add_location(p0, file$8, 58, 8, 1477);
+    			attr_dev(div0, "class", div0_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[3]) + " svelte-hlhpi0"));
+    			add_location(div0, file$8, 57, 4, 1415);
+    			add_location(p1, file$8, 61, 8, 1557);
+    			attr_dev(div1, "class", "btn callib-gyro svelte-hlhpi0");
+    			add_location(div1, file$8, 60, 4, 1518);
+    			add_location(p2, file$8, 64, 8, 1632);
+    			attr_dev(div2, "class", "btn fintest svelte-hlhpi0");
+    			add_location(div2, file$8, 63, 4, 1597);
+    			add_location(p3, file$8, 67, 8, 1763);
+    			attr_dev(div3, "class", "btn finoffset svelte-hlhpi0");
+    			add_location(div3, file$8, 66, 4, 1665);
+    			add_location(p4, file$8, 70, 8, 1856);
+    			attr_dev(div4, "class", "btn begintest svelte-hlhpi0");
+    			add_location(div4, file$8, 69, 4, 1798);
+    			add_location(p5, file$8, 73, 8, 1941);
+    			attr_dev(div5, "class", "btn reset svelte-hlhpi0");
+    			add_location(div5, file$8, 72, 4, 1891);
+    			add_location(p6, file$8, 76, 8, 2002);
+    			attr_dev(div6, "class", "btn arm svelte-hlhpi0");
+    			add_location(div6, file$8, 75, 4, 1971);
+    			attr_dev(controls, "class", "svelte-hlhpi0");
+    			add_location(controls, file$8, 56, 0, 1399);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -15568,19 +15588,27 @@ var app = (function () {
     			append_dev(controls, div4);
     			append_dev(div4, p4);
     			append_dev(controls, t9);
+    			append_dev(controls, div5);
+    			append_dev(div5, p5);
+    			append_dev(controls, t11);
+    			append_dev(controls, div6);
+    			append_dev(div6, p6);
+    			append_dev(controls, t13);
     			if (if_block) if_block.m(controls, null);
     			current = true;
 
     			dispose = [
     				listen_dev(div0, "click", /*toggleRadio*/ ctx[5], false, false, false),
     				listen_dev(div3, "click", /*click_handler*/ ctx[10], false, false, false),
-    				listen_dev(div3, "click", /*getOffsets*/ ctx[6], false, false, false)
+    				listen_dev(div3, "click", /*getOffsets*/ ctx[6], false, false, false),
+    				listen_dev(div4, "click", beginTest, false, false, false),
+    				listen_dev(div5, "click", reset, false, false, false)
     			];
     		},
     		p: function update(ctx, [dirty]) {
     			if (!current || dirty & /*connectBtnText*/ 4) set_data_dev(t0, /*connectBtnText*/ ctx[2]);
 
-    			if (!current || dirty & /*connectBtnClass*/ 8 && div0_class_value !== (div0_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[3]) + " svelte-195s5gn"))) {
+    			if (!current || dirty & /*connectBtnClass*/ 8 && div0_class_value !== (div0_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[3]) + " svelte-hlhpi0"))) {
     				attr_dev(div0, "class", div0_class_value);
     			}
 
@@ -15629,6 +15657,14 @@ var app = (function () {
     	});
 
     	return block;
+    }
+
+    function beginTest() {
+    	window.api.send("toMain", { command: "beginTest" });
+    }
+
+    function reset() {
+    	window.api.send("toMain", { command: "reset" });
     }
 
     function instance$9($$self, $$props, $$invalidate) {
@@ -15705,6 +15741,8 @@ var app = (function () {
     		toggleRadio,
     		getOffsets,
     		updateOffsets,
+    		beginTest,
+    		reset,
     		window,
     		console
     	});

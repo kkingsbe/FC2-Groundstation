@@ -43,6 +43,14 @@ export let offsetL
         console.log(`L: ${offsetL}, R: ${offsetR}`)
     }
 
+    function beginTest() {
+        window.api.send("toMain", {command: "beginTest"})
+    }
+
+    function reset() {
+        window.api.send("toMain", {command: "reset"})
+    }
+
     $:offsetL,updateOffsets()
 </script>
 
@@ -58,6 +66,12 @@ export let offsetL
     </div>
     <div class="btn finoffset" on:click={() => {modFinOffset = true}} on:click={getOffsets}>
         <p>Fin Offset</p>
+    </div>
+    <div class="btn begintest" on:click={beginTest}>
+        <p>Begin Test</p>
+    </div>
+    <div class="btn reset" on:click={reset}>
+        <p>Reset</p>
     </div>
     <div class="btn arm">
         <p>Arm</p>
@@ -75,7 +89,7 @@ export let offsetL
         flex-direction: column;
         align-items: center;
         justify-content: space-evenly;
-        height: 50%;
+        height: 60%;
     }
 
     .modal {
@@ -129,6 +143,14 @@ export let offsetL
     }
 
     .arm {
+        background: linear-gradient(45deg, #7F00FF, #E100FF);
+    }
+
+    .begintest {
+        background: linear-gradient(45deg, #7F00FF, #E100FF);
+    }
+
+    .reset {
         background: linear-gradient(45deg, #7F00FF, #E100FF);
     }
 </style>

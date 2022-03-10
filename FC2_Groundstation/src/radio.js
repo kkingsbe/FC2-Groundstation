@@ -1,6 +1,6 @@
 const SerialPort = require("serialport")
 
-const startupCode = "AT+ADDRESS=1\r\nAT+PARAMETER=12,2,2,4"
+const startupCode = "AT+ADDRESS=1\r\nAT+PARAMETER=12,7,1,4"
 var dataToParse = []
 var lastLine = ""
 var serialport
@@ -8,6 +8,7 @@ var portOpen = false
 var port
 
 const start = () => {
+    console.log("Connecting to port: " + port)
     serialport = new SerialPort(port, {
         baudRate: 115200
     })

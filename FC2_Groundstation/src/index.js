@@ -94,6 +94,13 @@ ipcMain.on("toMain", async(event, args) => {
         break
       case "setPort":
         radio.setPort(args.data)
+        break
+      case "beginTest":
+        radio.writeData("#beginTest");
+        break
+      case "reset":
+        radio.writeData("#reset");
+        break
       case "endRadio":
         radio.end()
         break
