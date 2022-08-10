@@ -42,15 +42,9 @@
 </script>
 
 <main>
-	<StateDisp {state}></StateDisp>
+	<StateDisp bind:connectedToRadio={connectedToRadio} {state}></StateDisp>
 	<div class="cont">
-		<div class="left">
-			<Controls bind:connectedToRadio={connectedToRadio} bind:offsetL={offsetL} bind:offsetR={offsetR}></Controls>
-		</div>
-		<div class="right">
-			<Data bind:data = {data}></Data>
-			<Graphs bind:rocketData={dataOverTime} bind:dataWindow={maxDataPoints}></Graphs>
-		</div>
+		<Controls bind:connectedToRadio={connectedToRadio} bind:offsetL={offsetL} bind:offsetR={offsetR}></Controls>
 	</div>
 </main>
 
@@ -63,7 +57,7 @@
 		height: 100%;
 		display: flex;
 		flex-direction: column;
-		background: rgb(35, 30, 56);
+		background: #2A303C;
 		overflow-y: hidden;
 	}
 

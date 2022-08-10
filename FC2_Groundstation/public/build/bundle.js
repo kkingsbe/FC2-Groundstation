@@ -464,14 +464,14 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[1] = list[i];
+    	child_ctx[5] = list[i];
     	return child_ctx;
     }
 
-    // (25:8) {#each ports as port}
+    // (48:8) {#each ports as port}
     function create_each_block(ctx) {
     	let option;
-    	let t_value = /*port*/ ctx[1] + "";
+    	let t_value = /*port*/ ctx[5] + "";
     	let t;
 
     	const block = {
@@ -480,14 +480,14 @@ var app = (function () {
     			t = text(t_value);
     			option.__value = "port";
     			option.value = option.__value;
-    			add_location(option, file, 25, 8, 591);
+    			add_location(option, file, 48, 8, 1319);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
     			append_dev(option, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*ports*/ 1 && t_value !== (t_value = /*port*/ ctx[1] + "")) set_data_dev(t, t_value);
+    			if (dirty & /*ports*/ 1 && t_value !== (t_value = /*port*/ ctx[5] + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(option);
@@ -498,7 +498,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(25:8) {#each ports as port}",
+    		source: "(48:8) {#each ports as port}",
     		ctx
     	});
 
@@ -507,6 +507,11 @@ var app = (function () {
 
     function create_fragment(ctx) {
     	let comportselect;
+    	let div;
+    	let p;
+    	let t0;
+    	let div_class_value;
+    	let t1;
     	let select;
     	let dispose;
     	let each_value = /*ports*/ ctx[0];
@@ -520,20 +525,32 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			comportselect = element("comportselect");
+    			div = element("div");
+    			p = element("p");
+    			t0 = text(/*connectBtnText*/ ctx[1]);
+    			t1 = space();
     			select = element("select");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			add_location(select, file, 23, 4, 497);
-    			add_location(comportselect, file, 22, 0, 476);
+    			add_location(p, file, 44, 8, 1184);
+    			attr_dev(div, "class", div_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[2]) + " svelte-6cl3we"));
+    			add_location(div, file, 43, 4, 1122);
+    			add_location(select, file, 46, 4, 1225);
+    			attr_dev(comportselect, "class", "svelte-6cl3we");
+    			add_location(comportselect, file, 42, 0, 1101);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, comportselect, anchor);
+    			append_dev(comportselect, div);
+    			append_dev(div, p);
+    			append_dev(p, t0);
+    			append_dev(comportselect, t1);
     			append_dev(comportselect, select);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -541,11 +558,18 @@ var app = (function () {
     			}
 
     			dispose = [
+    				listen_dev(div, "click", /*toggleRadio*/ ctx[3], false, false, false),
     				listen_dev(select, "change", updatePort, false, false, false),
     				listen_dev(select, "click", updatePort, false, false, false)
     			];
     		},
     		p: function update(ctx, [dirty]) {
+    			if (dirty & /*connectBtnText*/ 2) set_data_dev(t0, /*connectBtnText*/ ctx[1]);
+
+    			if (dirty & /*connectBtnClass*/ 4 && div_class_value !== (div_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[2]) + " svelte-6cl3we"))) {
+    				attr_dev(div, "class", div_class_value);
+    			}
+
     			if (dirty & /*ports*/ 1) {
     				each_value = /*ports*/ ctx[0];
     				validate_each_argument(each_value);
@@ -600,7 +624,10 @@ var app = (function () {
     }
 
     function instance($$self, $$props, $$invalidate) {
+    	let { connectedToRadio } = $$props;
     	let ports = [];
+    	var connectBtnText = "Connect";
+    	var connectBtnClass = "btn connect";
     	window.api.send("toMain", { command: "getPorts" });
 
     	window.api.receive("fromMain", msg => {
@@ -610,23 +637,67 @@ var app = (function () {
     		}
     	});
 
-    	$$self.$capture_state = () => ({ ports, updatePort, setPort, window });
+    	function toggleRadio() {
+    		if (!connectedToRadio) {
+    			$$invalidate(4, connectedToRadio = true);
+    			window.api.send("toMain", { command: "startRadio" });
+    		} else {
+    			$$invalidate(4, connectedToRadio = false);
+    			window.api.send("toMain", { command: "endRadio" });
+    		}
+    	}
+
+    	const writable_props = ["connectedToRadio"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<ComPortSelect> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$set = $$props => {
+    		if ("connectedToRadio" in $$props) $$invalidate(4, connectedToRadio = $$props.connectedToRadio);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		connectedToRadio,
+    		ports,
+    		connectBtnText,
+    		connectBtnClass,
+    		updatePort,
+    		setPort,
+    		toggleRadio,
+    		window
+    	});
 
     	$$self.$inject_state = $$props => {
+    		if ("connectedToRadio" in $$props) $$invalidate(4, connectedToRadio = $$props.connectedToRadio);
     		if ("ports" in $$props) $$invalidate(0, ports = $$props.ports);
+    		if ("connectBtnText" in $$props) $$invalidate(1, connectBtnText = $$props.connectBtnText);
+    		if ("connectBtnClass" in $$props) $$invalidate(2, connectBtnClass = $$props.connectBtnClass);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [ports];
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*connectedToRadio*/ 16) {
+    			 if (connectedToRadio) {
+    				$$invalidate(1, connectBtnText = "Disconnect");
+    				$$invalidate(2, connectBtnClass = "btn disconnect");
+    			} else {
+    				$$invalidate(1, connectBtnText = "Connect");
+    				$$invalidate(2, connectBtnClass = "btn connect");
+    			}
+    		}
+    	};
+
+    	return [ports, connectBtnText, connectBtnClass, toggleRadio, connectedToRadio];
     }
 
     class ComPortSelect extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, {});
+    		init(this, options, instance, create_fragment, safe_not_equal, { connectedToRadio: 4 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -634,6 +705,21 @@ var app = (function () {
     			options,
     			id: create_fragment.name
     		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*connectedToRadio*/ ctx[4] === undefined && !("connectedToRadio" in props)) {
+    			console.warn("<ComPortSelect> was created without expected prop 'connectedToRadio'");
+    		}
+    	}
+
+    	get connectedToRadio() {
+    		throw new Error("<ComPortSelect>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set connectedToRadio(value) {
+    		throw new Error("<ComPortSelect>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
@@ -642,44 +728,65 @@ var app = (function () {
 
     function create_fragment$1(ctx) {
     	let statedisp;
-    	let div;
-    	let t0;
     	let p;
+    	let t0;
     	let t1;
     	let t2;
+    	let updating_connectedToRadio;
     	let current;
-    	const comportselect = new ComPortSelect({ $$inline: true });
+
+    	function comportselect_connectedToRadio_binding(value) {
+    		/*comportselect_connectedToRadio_binding*/ ctx[2].call(null, value);
+    	}
+
+    	let comportselect_props = {};
+
+    	if (/*connectedToRadio*/ ctx[0] !== void 0) {
+    		comportselect_props.connectedToRadio = /*connectedToRadio*/ ctx[0];
+    	}
+
+    	const comportselect = new ComPortSelect({
+    			props: comportselect_props,
+    			$$inline: true
+    		});
+
+    	binding_callbacks.push(() => bind(comportselect, "connectedToRadio", comportselect_connectedToRadio_binding));
 
     	const block = {
     		c: function create() {
     			statedisp = element("statedisp");
-    			div = element("div");
-    			create_component(comportselect.$$.fragment);
-    			t0 = space();
     			p = element("p");
-    			t1 = text("State: ");
-    			t2 = text(/*state*/ ctx[0]);
-    			attr_dev(div, "class", "comportcont svelte-iyzoyz");
-    			add_location(div, file$1, 7, 4, 126);
-    			add_location(p, file$1, 11, 4, 216);
-    			attr_dev(statedisp, "class", "svelte-iyzoyz");
-    			add_location(statedisp, file$1, 6, 0, 109);
+    			t0 = text("State: ");
+    			t1 = text(/*state*/ ctx[1]);
+    			t2 = space();
+    			create_component(comportselect.$$.fragment);
+    			add_location(p, file$1, 8, 4, 159);
+    			attr_dev(statedisp, "class", "svelte-133qq3b");
+    			add_location(statedisp, file$1, 7, 0, 142);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, statedisp, anchor);
-    			append_dev(statedisp, div);
-    			mount_component(comportselect, div, null);
-    			append_dev(statedisp, t0);
     			append_dev(statedisp, p);
+    			append_dev(p, t0);
     			append_dev(p, t1);
-    			append_dev(p, t2);
+    			append_dev(statedisp, t2);
+    			mount_component(comportselect, statedisp, null);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*state*/ 1) set_data_dev(t2, /*state*/ ctx[0]);
+    			if (!current || dirty & /*state*/ 2) set_data_dev(t1, /*state*/ ctx[1]);
+    			const comportselect_changes = {};
+
+    			if (!updating_connectedToRadio && dirty & /*connectedToRadio*/ 1) {
+    				updating_connectedToRadio = true;
+    				comportselect_changes.connectedToRadio = /*connectedToRadio*/ ctx[0];
+    				add_flush_callback(() => updating_connectedToRadio = false);
+    			}
+
+    			comportselect.$set(comportselect_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -709,33 +816,41 @@ var app = (function () {
 
     function instance$1($$self, $$props, $$invalidate) {
     	let { state } = $$props;
-    	const writable_props = ["state"];
+    	let { connectedToRadio } = $$props;
+    	const writable_props = ["state", "connectedToRadio"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<StateDisp> was created with unknown prop '${key}'`);
     	});
 
+    	function comportselect_connectedToRadio_binding(value) {
+    		connectedToRadio = value;
+    		$$invalidate(0, connectedToRadio);
+    	}
+
     	$$self.$set = $$props => {
-    		if ("state" in $$props) $$invalidate(0, state = $$props.state);
+    		if ("state" in $$props) $$invalidate(1, state = $$props.state);
+    		if ("connectedToRadio" in $$props) $$invalidate(0, connectedToRadio = $$props.connectedToRadio);
     	};
 
-    	$$self.$capture_state = () => ({ state, ComPortSelect });
+    	$$self.$capture_state = () => ({ state, connectedToRadio, ComPortSelect });
 
     	$$self.$inject_state = $$props => {
-    		if ("state" in $$props) $$invalidate(0, state = $$props.state);
+    		if ("state" in $$props) $$invalidate(1, state = $$props.state);
+    		if ("connectedToRadio" in $$props) $$invalidate(0, connectedToRadio = $$props.connectedToRadio);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [state];
+    	return [connectedToRadio, state, comportselect_connectedToRadio_binding];
     }
 
     class StateDisp extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { state: 0 });
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { state: 1, connectedToRadio: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -747,8 +862,12 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*state*/ ctx[0] === undefined && !("state" in props)) {
+    		if (/*state*/ ctx[1] === undefined && !("state" in props)) {
     			console.warn("<StateDisp> was created without expected prop 'state'");
+    		}
+
+    		if (/*connectedToRadio*/ ctx[0] === undefined && !("connectedToRadio" in props)) {
+    			console.warn("<StateDisp> was created without expected prop 'connectedToRadio'");
     		}
     	}
 
@@ -757,6 +876,14 @@ var app = (function () {
     	}
 
     	set state(value) {
+    		throw new Error("<StateDisp>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get connectedToRadio() {
+    		throw new Error("<StateDisp>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set connectedToRadio(value) {
     		throw new Error("<StateDisp>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -15200,14 +15327,14 @@ var app = (function () {
 
     function get_each_context$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[1] = list[i];
+    	child_ctx[5] = list[i];
     	return child_ctx;
     }
 
-    // (25:8) {#each ports as port}
+    // (48:8) {#each ports as port}
     function create_each_block$1(ctx) {
     	let option;
-    	let t_value = /*port*/ ctx[1] + "";
+    	let t_value = /*port*/ ctx[5] + "";
     	let t;
 
     	const block = {
@@ -15216,14 +15343,14 @@ var app = (function () {
     			t = text(t_value);
     			option.__value = "port";
     			option.value = option.__value;
-    			add_location(option, file$7, 25, 8, 591);
+    			add_location(option, file$7, 48, 8, 1319);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
     			append_dev(option, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*ports*/ 1 && t_value !== (t_value = /*port*/ ctx[1] + "")) set_data_dev(t, t_value);
+    			if (dirty & /*ports*/ 1 && t_value !== (t_value = /*port*/ ctx[5] + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(option);
@@ -15234,7 +15361,7 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(25:8) {#each ports as port}",
+    		source: "(48:8) {#each ports as port}",
     		ctx
     	});
 
@@ -15243,6 +15370,11 @@ var app = (function () {
 
     function create_fragment$8(ctx) {
     	let comportselect;
+    	let div;
+    	let p;
+    	let t0;
+    	let div_class_value;
+    	let t1;
     	let select;
     	let dispose;
     	let each_value = /*ports*/ ctx[0];
@@ -15256,20 +15388,32 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			comportselect = element("comportselect");
+    			div = element("div");
+    			p = element("p");
+    			t0 = text(/*connectBtnText*/ ctx[1]);
+    			t1 = space();
     			select = element("select");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			add_location(select, file$7, 23, 4, 497);
-    			add_location(comportselect, file$7, 22, 0, 476);
+    			add_location(p, file$7, 44, 8, 1184);
+    			attr_dev(div, "class", div_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[2]) + " svelte-6cl3we"));
+    			add_location(div, file$7, 43, 4, 1122);
+    			add_location(select, file$7, 46, 4, 1225);
+    			attr_dev(comportselect, "class", "svelte-6cl3we");
+    			add_location(comportselect, file$7, 42, 0, 1101);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, comportselect, anchor);
+    			append_dev(comportselect, div);
+    			append_dev(div, p);
+    			append_dev(p, t0);
+    			append_dev(comportselect, t1);
     			append_dev(comportselect, select);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -15277,11 +15421,18 @@ var app = (function () {
     			}
 
     			dispose = [
+    				listen_dev(div, "click", /*toggleRadio*/ ctx[3], false, false, false),
     				listen_dev(select, "change", updatePort$1, false, false, false),
     				listen_dev(select, "click", updatePort$1, false, false, false)
     			];
     		},
     		p: function update(ctx, [dirty]) {
+    			if (dirty & /*connectBtnText*/ 2) set_data_dev(t0, /*connectBtnText*/ ctx[1]);
+
+    			if (dirty & /*connectBtnClass*/ 4 && div_class_value !== (div_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[2]) + " svelte-6cl3we"))) {
+    				attr_dev(div, "class", div_class_value);
+    			}
+
     			if (dirty & /*ports*/ 1) {
     				each_value = /*ports*/ ctx[0];
     				validate_each_argument(each_value);
@@ -15336,7 +15487,10 @@ var app = (function () {
     }
 
     function instance$8($$self, $$props, $$invalidate) {
+    	let { connectedToRadio } = $$props;
     	let ports = [];
+    	var connectBtnText = "Connect";
+    	var connectBtnClass = "btn connect";
     	window.api.send("toMain", { command: "getPorts" });
 
     	window.api.receive("fromMain", msg => {
@@ -15346,23 +15500,67 @@ var app = (function () {
     		}
     	});
 
-    	$$self.$capture_state = () => ({ ports, updatePort: updatePort$1, setPort: setPort$1, window });
+    	function toggleRadio() {
+    		if (!connectedToRadio) {
+    			$$invalidate(4, connectedToRadio = true);
+    			window.api.send("toMain", { command: "startRadio" });
+    		} else {
+    			$$invalidate(4, connectedToRadio = false);
+    			window.api.send("toMain", { command: "endRadio" });
+    		}
+    	}
+
+    	const writable_props = ["connectedToRadio"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<ComPortSelect> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$set = $$props => {
+    		if ("connectedToRadio" in $$props) $$invalidate(4, connectedToRadio = $$props.connectedToRadio);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		connectedToRadio,
+    		ports,
+    		connectBtnText,
+    		connectBtnClass,
+    		updatePort: updatePort$1,
+    		setPort: setPort$1,
+    		toggleRadio,
+    		window
+    	});
 
     	$$self.$inject_state = $$props => {
+    		if ("connectedToRadio" in $$props) $$invalidate(4, connectedToRadio = $$props.connectedToRadio);
     		if ("ports" in $$props) $$invalidate(0, ports = $$props.ports);
+    		if ("connectBtnText" in $$props) $$invalidate(1, connectBtnText = $$props.connectBtnText);
+    		if ("connectBtnClass" in $$props) $$invalidate(2, connectBtnClass = $$props.connectBtnClass);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [ports];
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*connectedToRadio*/ 16) {
+    			 if (connectedToRadio) {
+    				$$invalidate(1, connectBtnText = "Disconnect");
+    				$$invalidate(2, connectBtnClass = "btn disconnect");
+    			} else {
+    				$$invalidate(1, connectBtnText = "Connect");
+    				$$invalidate(2, connectBtnClass = "btn connect");
+    			}
+    		}
+    	};
+
+    	return [ports, connectBtnText, connectBtnClass, toggleRadio, connectedToRadio];
     }
 
     class ComPortSelect$1 extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$8, create_fragment$8, safe_not_equal, {});
+    		init(this, options, instance$8, create_fragment$8, safe_not_equal, { connectedToRadio: 4 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -15370,6 +15568,21 @@ var app = (function () {
     			options,
     			id: create_fragment$8.name
     		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*connectedToRadio*/ ctx[4] === undefined && !("connectedToRadio" in props)) {
+    			console.warn("<ComPortSelect> was created without expected prop 'connectedToRadio'");
+    		}
+    	}
+
+    	get connectedToRadio() {
+    		throw new Error("<ComPortSelect>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set connectedToRadio(value) {
+    		throw new Error("<ComPortSelect>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
@@ -15378,7 +15591,7 @@ var app = (function () {
     const { console: console_1$2 } = globals;
     const file$8 = "src\\components\\Controls.svelte";
 
-    // (79:4) {#if modFinOffset}
+    // (84:4) {#if modFinOffset}
     function create_if_block(ctx) {
     	let div;
     	let updating_modFinOffset;
@@ -15400,8 +15613,8 @@ var app = (function () {
 
     	let finoffsetmodal_props = {};
 
-    	if (/*modFinOffset*/ ctx[4] !== void 0) {
-    		finoffsetmodal_props.modFinOffset = /*modFinOffset*/ ctx[4];
+    	if (/*modFinOffset*/ ctx[2] !== void 0) {
+    		finoffsetmodal_props.modFinOffset = /*modFinOffset*/ ctx[2];
     	}
 
     	if (/*offsetL*/ ctx[0] !== void 0) {
@@ -15425,8 +15638,8 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			create_component(finoffsetmodal.$$.fragment);
-    			attr_dev(div, "class", "modal svelte-hlhpi0");
-    			add_location(div, file$8, 79, 4, 2054);
+    			attr_dev(div, "class", "modal svelte-14fcpxx");
+    			add_location(div, file$8, 84, 4, 2201);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -15436,9 +15649,9 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const finoffsetmodal_changes = {};
 
-    			if (!updating_modFinOffset && dirty & /*modFinOffset*/ 16) {
+    			if (!updating_modFinOffset && dirty & /*modFinOffset*/ 4) {
     				updating_modFinOffset = true;
-    				finoffsetmodal_changes.modFinOffset = /*modFinOffset*/ ctx[4];
+    				finoffsetmodal_changes.modFinOffset = /*modFinOffset*/ ctx[2];
     				add_flush_callback(() => updating_modFinOffset = false);
     			}
 
@@ -15475,7 +15688,7 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(79:4) {#if modFinOffset}",
+    		source: "(84:4) {#if modFinOffset}",
     		ctx
     	});
 
@@ -15484,10 +15697,9 @@ var app = (function () {
 
     function create_fragment$9(ctx) {
     	let controls;
+    	let div3;
     	let div0;
     	let p0;
-    	let t0;
-    	let div0_class_value;
     	let t1;
     	let div1;
     	let p1;
@@ -15495,76 +15707,73 @@ var app = (function () {
     	let div2;
     	let p2;
     	let t5;
-    	let div3;
+    	let div7;
+    	let div4;
     	let p3;
     	let t7;
-    	let div4;
+    	let div5;
     	let p4;
     	let t9;
-    	let div5;
+    	let div6;
     	let p5;
     	let t11;
-    	let div6;
-    	let p6;
-    	let t13;
     	let current;
     	let dispose;
-    	let if_block = /*modFinOffset*/ ctx[4] && create_if_block(ctx);
+    	let if_block = /*modFinOffset*/ ctx[2] && create_if_block(ctx);
 
     	const block = {
     		c: function create() {
     			controls = element("controls");
+    			div3 = element("div");
     			div0 = element("div");
     			p0 = element("p");
-    			t0 = text(/*connectBtnText*/ ctx[2]);
+    			p0.textContent = "Calibrate";
     			t1 = space();
     			div1 = element("div");
     			p1 = element("p");
-    			p1.textContent = "Callibrate Gyro";
+    			p1.textContent = "Fin Test";
     			t3 = space();
     			div2 = element("div");
     			p2 = element("p");
-    			p2.textContent = "Fin Test";
+    			p2.textContent = "Fin Offset";
     			t5 = space();
-    			div3 = element("div");
-    			p3 = element("p");
-    			p3.textContent = "Fin Offset";
-    			t7 = space();
+    			div7 = element("div");
     			div4 = element("div");
-    			p4 = element("p");
-    			p4.textContent = "Begin Test";
-    			t9 = space();
+    			p3 = element("p");
+    			p3.textContent = "Begin Test";
+    			t7 = space();
     			div5 = element("div");
-    			p5 = element("p");
-    			p5.textContent = "Reset";
-    			t11 = space();
+    			p4 = element("p");
+    			p4.textContent = "Reset";
+    			t9 = space();
     			div6 = element("div");
-    			p6 = element("p");
-    			p6.textContent = "Arm";
-    			t13 = space();
+    			p5 = element("p");
+    			p5.textContent = "Arm";
+    			t11 = space();
     			if (if_block) if_block.c();
-    			add_location(p0, file$8, 58, 8, 1477);
-    			attr_dev(div0, "class", div0_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[3]) + " svelte-hlhpi0"));
-    			add_location(div0, file$8, 57, 4, 1415);
-    			add_location(p1, file$8, 61, 8, 1557);
-    			attr_dev(div1, "class", "btn callib-gyro svelte-hlhpi0");
-    			add_location(div1, file$8, 60, 4, 1518);
-    			add_location(p2, file$8, 64, 8, 1632);
-    			attr_dev(div2, "class", "btn fintest svelte-hlhpi0");
-    			add_location(div2, file$8, 63, 4, 1597);
-    			add_location(p3, file$8, 67, 8, 1763);
-    			attr_dev(div3, "class", "btn finoffset svelte-hlhpi0");
-    			add_location(div3, file$8, 66, 4, 1665);
-    			add_location(p4, file$8, 70, 8, 1856);
-    			attr_dev(div4, "class", "btn begintest svelte-hlhpi0");
-    			add_location(div4, file$8, 69, 4, 1798);
-    			add_location(p5, file$8, 73, 8, 1941);
-    			attr_dev(div5, "class", "btn reset svelte-hlhpi0");
-    			add_location(div5, file$8, 72, 4, 1891);
-    			add_location(p6, file$8, 76, 8, 2002);
-    			attr_dev(div6, "class", "btn arm svelte-hlhpi0");
-    			add_location(div6, file$8, 75, 4, 1971);
-    			attr_dev(controls, "class", "svelte-hlhpi0");
+    			add_location(p0, file$8, 62, 12, 1593);
+    			attr_dev(div0, "class", "btn callib-gyro svelte-14fcpxx");
+    			add_location(div0, file$8, 61, 8, 1550);
+    			add_location(p1, file$8, 65, 12, 1674);
+    			attr_dev(div1, "class", "btn fintest svelte-14fcpxx");
+    			add_location(div1, file$8, 64, 8, 1635);
+    			add_location(p2, file$8, 68, 12, 1817);
+    			attr_dev(div2, "class", "btn finoffset svelte-14fcpxx");
+    			add_location(div2, file$8, 67, 8, 1715);
+    			attr_dev(div3, "class", "row svelte-14fcpxx");
+    			add_location(div3, file$8, 60, 4, 1523);
+    			add_location(p3, file$8, 73, 12, 1957);
+    			attr_dev(div4, "class", "btn begintest svelte-14fcpxx");
+    			add_location(div4, file$8, 72, 8, 1895);
+    			add_location(p4, file$8, 76, 12, 2054);
+    			attr_dev(div5, "class", "btn reset svelte-14fcpxx");
+    			add_location(div5, file$8, 75, 8, 2000);
+    			add_location(p5, file$8, 79, 12, 2127);
+    			attr_dev(div6, "class", "btn arm svelte-14fcpxx");
+    			add_location(div6, file$8, 78, 8, 2092);
+    			attr_dev(div7, "class", "row svelte-14fcpxx");
+    			add_location(div7, file$8, 71, 4, 1868);
+    			attr_dev(controls, "class", "svelte-14fcpxx");
     			add_location(controls, file$8, 56, 0, 1399);
     		},
     		l: function claim(nodes) {
@@ -15572,47 +15781,38 @@ var app = (function () {
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, controls, anchor);
-    			append_dev(controls, div0);
+    			append_dev(controls, div3);
+    			append_dev(div3, div0);
     			append_dev(div0, p0);
-    			append_dev(p0, t0);
-    			append_dev(controls, t1);
-    			append_dev(controls, div1);
+    			append_dev(div3, t1);
+    			append_dev(div3, div1);
     			append_dev(div1, p1);
-    			append_dev(controls, t3);
-    			append_dev(controls, div2);
+    			append_dev(div3, t3);
+    			append_dev(div3, div2);
     			append_dev(div2, p2);
     			append_dev(controls, t5);
-    			append_dev(controls, div3);
-    			append_dev(div3, p3);
-    			append_dev(controls, t7);
-    			append_dev(controls, div4);
-    			append_dev(div4, p4);
-    			append_dev(controls, t9);
-    			append_dev(controls, div5);
-    			append_dev(div5, p5);
+    			append_dev(controls, div7);
+    			append_dev(div7, div4);
+    			append_dev(div4, p3);
+    			append_dev(div7, t7);
+    			append_dev(div7, div5);
+    			append_dev(div5, p4);
+    			append_dev(div7, t9);
+    			append_dev(div7, div6);
+    			append_dev(div6, p5);
     			append_dev(controls, t11);
-    			append_dev(controls, div6);
-    			append_dev(div6, p6);
-    			append_dev(controls, t13);
     			if (if_block) if_block.m(controls, null);
     			current = true;
 
     			dispose = [
-    				listen_dev(div0, "click", /*toggleRadio*/ ctx[5], false, false, false),
-    				listen_dev(div3, "click", /*click_handler*/ ctx[10], false, false, false),
-    				listen_dev(div3, "click", /*getOffsets*/ ctx[6], false, false, false),
+    				listen_dev(div2, "click", /*click_handler*/ ctx[10], false, false, false),
+    				listen_dev(div2, "click", /*getOffsets*/ ctx[3], false, false, false),
     				listen_dev(div4, "click", beginTest, false, false, false),
     				listen_dev(div5, "click", reset, false, false, false)
     			];
     		},
     		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*connectBtnText*/ 4) set_data_dev(t0, /*connectBtnText*/ ctx[2]);
-
-    			if (!current || dirty & /*connectBtnClass*/ 8 && div0_class_value !== (div0_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[3]) + " svelte-hlhpi0"))) {
-    				attr_dev(div0, "class", div0_class_value);
-    			}
-
-    			if (/*modFinOffset*/ ctx[4]) {
+    			if (/*modFinOffset*/ ctx[2]) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     					transition_in(if_block, 1);
@@ -15678,10 +15878,10 @@ var app = (function () {
 
     	function toggleRadio() {
     		if (!connectedToRadio) {
-    			$$invalidate(7, connectedToRadio = true);
+    			$$invalidate(4, connectedToRadio = true);
     			window.api.send("toMain", { command: "startRadio" });
     		} else {
-    			$$invalidate(7, connectedToRadio = false);
+    			$$invalidate(4, connectedToRadio = false);
     			window.api.send("toMain", { command: "endRadio" });
     		}
     	}
@@ -15704,12 +15904,12 @@ var app = (function () {
     	});
 
     	const click_handler = () => {
-    		$$invalidate(4, modFinOffset = true);
+    		$$invalidate(2, modFinOffset = true);
     	};
 
     	function finoffsetmodal_modFinOffset_binding(value) {
     		modFinOffset = value;
-    		$$invalidate(4, modFinOffset);
+    		$$invalidate(2, modFinOffset);
     	}
 
     	function finoffsetmodal_offsetL_binding(value) {
@@ -15723,7 +15923,7 @@ var app = (function () {
     	}
 
     	$$self.$set = $$props => {
-    		if ("connectedToRadio" in $$props) $$invalidate(7, connectedToRadio = $$props.connectedToRadio);
+    		if ("connectedToRadio" in $$props) $$invalidate(4, connectedToRadio = $$props.connectedToRadio);
     		if ("offsetL" in $$props) $$invalidate(0, offsetL = $$props.offsetL);
     		if ("offsetR" in $$props) $$invalidate(1, offsetR = $$props.offsetR);
     	};
@@ -15748,13 +15948,13 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("connectedToRadio" in $$props) $$invalidate(7, connectedToRadio = $$props.connectedToRadio);
+    		if ("connectedToRadio" in $$props) $$invalidate(4, connectedToRadio = $$props.connectedToRadio);
     		if ("offsetL" in $$props) $$invalidate(0, offsetL = $$props.offsetL);
     		if ("offsetR" in $$props) $$invalidate(1, offsetR = $$props.offsetR);
     		if ("awaitingOffsets" in $$props) awaitingOffsets = $$props.awaitingOffsets;
-    		if ("connectBtnText" in $$props) $$invalidate(2, connectBtnText = $$props.connectBtnText);
-    		if ("connectBtnClass" in $$props) $$invalidate(3, connectBtnClass = $$props.connectBtnClass);
-    		if ("modFinOffset" in $$props) $$invalidate(4, modFinOffset = $$props.modFinOffset);
+    		if ("connectBtnText" in $$props) connectBtnText = $$props.connectBtnText;
+    		if ("connectBtnClass" in $$props) connectBtnClass = $$props.connectBtnClass;
+    		if ("modFinOffset" in $$props) $$invalidate(2, modFinOffset = $$props.modFinOffset);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -15762,13 +15962,13 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*connectedToRadio*/ 128) {
+    		if ($$self.$$.dirty & /*connectedToRadio*/ 16) {
     			 if (connectedToRadio) {
-    				$$invalidate(2, connectBtnText = "Disconnect");
-    				$$invalidate(3, connectBtnClass = "btn disconnect");
+    				connectBtnText = "Disconnect";
+    				connectBtnClass = "btn disconnect";
     			} else {
-    				$$invalidate(2, connectBtnText = "Connect");
-    				$$invalidate(3, connectBtnClass = "btn connect");
+    				connectBtnText = "Connect";
+    				connectBtnClass = "btn connect";
     			}
     		}
 
@@ -15780,13 +15980,13 @@ var app = (function () {
     	return [
     		offsetL,
     		offsetR,
-    		connectBtnText,
-    		connectBtnClass,
     		modFinOffset,
-    		toggleRadio,
     		getOffsets,
     		connectedToRadio,
     		awaitingOffsets,
+    		connectBtnText,
+    		connectBtnClass,
+    		toggleRadio,
     		updateOffsets,
     		click_handler,
     		finoffsetmodal_modFinOffset_binding,
@@ -15800,7 +16000,7 @@ var app = (function () {
     		super(options);
 
     		init(this, options, instance$9, create_fragment$9, safe_not_equal, {
-    			connectedToRadio: 7,
+    			connectedToRadio: 4,
     			offsetL: 0,
     			offsetR: 1
     		});
@@ -15815,7 +16015,7 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*connectedToRadio*/ ctx[7] === undefined && !("connectedToRadio" in props)) {
+    		if (/*connectedToRadio*/ ctx[4] === undefined && !("connectedToRadio" in props)) {
     			console_1$2.warn("<Controls> was created without expected prop 'connectedToRadio'");
     		}
 
@@ -16204,35 +16404,37 @@ var app = (function () {
 
     function create_fragment$c(ctx) {
     	let main;
-    	let t0;
-    	let div2;
-    	let div0;
     	let updating_connectedToRadio;
+    	let t;
+    	let div;
+    	let updating_connectedToRadio_1;
     	let updating_offsetL;
     	let updating_offsetR;
-    	let t1;
-    	let div1;
-    	let updating_data;
-    	let t2;
-    	let updating_rocketData;
-    	let updating_dataWindow;
     	let current;
 
-    	const statedisp = new StateDisp({
-    			props: { state: /*state*/ ctx[6] },
-    			$$inline: true
-    		});
+    	function statedisp_connectedToRadio_binding(value) {
+    		/*statedisp_connectedToRadio_binding*/ ctx[8].call(null, value);
+    	}
+
+    	let statedisp_props = { state: /*state*/ ctx[3] };
+
+    	if (/*connectedToRadio*/ ctx[0] !== void 0) {
+    		statedisp_props.connectedToRadio = /*connectedToRadio*/ ctx[0];
+    	}
+
+    	const statedisp = new StateDisp({ props: statedisp_props, $$inline: true });
+    	binding_callbacks.push(() => bind(statedisp, "connectedToRadio", statedisp_connectedToRadio_binding));
 
     	function controls_connectedToRadio_binding(value) {
-    		/*controls_connectedToRadio_binding*/ ctx[8].call(null, value);
+    		/*controls_connectedToRadio_binding*/ ctx[9].call(null, value);
     	}
 
     	function controls_offsetL_binding(value) {
-    		/*controls_offsetL_binding*/ ctx[9].call(null, value);
+    		/*controls_offsetL_binding*/ ctx[10].call(null, value);
     	}
 
     	function controls_offsetR_binding(value) {
-    		/*controls_offsetR_binding*/ ctx[10].call(null, value);
+    		/*controls_offsetR_binding*/ ctx[11].call(null, value);
     	}
 
     	let controls_props = {};
@@ -16241,12 +16443,12 @@ var app = (function () {
     		controls_props.connectedToRadio = /*connectedToRadio*/ ctx[0];
     	}
 
-    	if (/*offsetL*/ ctx[4] !== void 0) {
-    		controls_props.offsetL = /*offsetL*/ ctx[4];
+    	if (/*offsetL*/ ctx[1] !== void 0) {
+    		controls_props.offsetL = /*offsetL*/ ctx[1];
     	}
 
-    	if (/*offsetR*/ ctx[5] !== void 0) {
-    		controls_props.offsetR = /*offsetR*/ ctx[5];
+    	if (/*offsetR*/ ctx[2] !== void 0) {
+    		controls_props.offsetR = /*offsetR*/ ctx[2];
     	}
 
     	const controls = new Controls({ props: controls_props, $$inline: true });
@@ -16254,61 +16456,16 @@ var app = (function () {
     	binding_callbacks.push(() => bind(controls, "offsetL", controls_offsetL_binding));
     	binding_callbacks.push(() => bind(controls, "offsetR", controls_offsetR_binding));
 
-    	function data_1_data_binding(value) {
-    		/*data_1_data_binding*/ ctx[11].call(null, value);
-    	}
-
-    	let data_1_props = {};
-
-    	if (/*data*/ ctx[1] !== void 0) {
-    		data_1_props.data = /*data*/ ctx[1];
-    	}
-
-    	const data_1 = new Data({ props: data_1_props, $$inline: true });
-    	binding_callbacks.push(() => bind(data_1, "data", data_1_data_binding));
-
-    	function graphs_rocketData_binding(value) {
-    		/*graphs_rocketData_binding*/ ctx[12].call(null, value);
-    	}
-
-    	function graphs_dataWindow_binding(value) {
-    		/*graphs_dataWindow_binding*/ ctx[13].call(null, value);
-    	}
-
-    	let graphs_props = {};
-
-    	if (/*dataOverTime*/ ctx[3] !== void 0) {
-    		graphs_props.rocketData = /*dataOverTime*/ ctx[3];
-    	}
-
-    	if (/*maxDataPoints*/ ctx[2] !== void 0) {
-    		graphs_props.dataWindow = /*maxDataPoints*/ ctx[2];
-    	}
-
-    	const graphs = new Graphs({ props: graphs_props, $$inline: true });
-    	binding_callbacks.push(() => bind(graphs, "rocketData", graphs_rocketData_binding));
-    	binding_callbacks.push(() => bind(graphs, "dataWindow", graphs_dataWindow_binding));
-
     	const block = {
     		c: function create() {
     			main = element("main");
     			create_component(statedisp.$$.fragment);
-    			t0 = space();
-    			div2 = element("div");
-    			div0 = element("div");
+    			t = space();
+    			div = element("div");
     			create_component(controls.$$.fragment);
-    			t1 = space();
-    			div1 = element("div");
-    			create_component(data_1.$$.fragment);
-    			t2 = space();
-    			create_component(graphs.$$.fragment);
-    			attr_dev(div0, "class", "left svelte-frqnkq");
-    			add_location(div0, file$b, 46, 2, 1119);
-    			attr_dev(div1, "class", "right svelte-frqnkq");
-    			add_location(div1, file$b, 49, 2, 1264);
-    			attr_dev(div2, "class", "cont svelte-frqnkq");
-    			add_location(div2, file$b, 45, 1, 1097);
-    			attr_dev(main, "class", "svelte-frqnkq");
+    			attr_dev(div, "class", "cont svelte-h27j7z");
+    			add_location(div, file$b, 45, 1, 1138);
+    			attr_dev(main, "class", "svelte-h27j7z");
     			add_location(main, file$b, 43, 0, 1054);
     		},
     		l: function claim(nodes) {
@@ -16317,85 +16474,58 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			insert_dev(target, main, anchor);
     			mount_component(statedisp, main, null);
-    			append_dev(main, t0);
-    			append_dev(main, div2);
-    			append_dev(div2, div0);
-    			mount_component(controls, div0, null);
-    			append_dev(div2, t1);
-    			append_dev(div2, div1);
-    			mount_component(data_1, div1, null);
-    			append_dev(div1, t2);
-    			mount_component(graphs, div1, null);
+    			append_dev(main, t);
+    			append_dev(main, div);
+    			mount_component(controls, div, null);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			const controls_changes = {};
+    			const statedisp_changes = {};
 
     			if (!updating_connectedToRadio && dirty & /*connectedToRadio*/ 1) {
     				updating_connectedToRadio = true;
-    				controls_changes.connectedToRadio = /*connectedToRadio*/ ctx[0];
+    				statedisp_changes.connectedToRadio = /*connectedToRadio*/ ctx[0];
     				add_flush_callback(() => updating_connectedToRadio = false);
     			}
 
-    			if (!updating_offsetL && dirty & /*offsetL*/ 16) {
+    			statedisp.$set(statedisp_changes);
+    			const controls_changes = {};
+
+    			if (!updating_connectedToRadio_1 && dirty & /*connectedToRadio*/ 1) {
+    				updating_connectedToRadio_1 = true;
+    				controls_changes.connectedToRadio = /*connectedToRadio*/ ctx[0];
+    				add_flush_callback(() => updating_connectedToRadio_1 = false);
+    			}
+
+    			if (!updating_offsetL && dirty & /*offsetL*/ 2) {
     				updating_offsetL = true;
-    				controls_changes.offsetL = /*offsetL*/ ctx[4];
+    				controls_changes.offsetL = /*offsetL*/ ctx[1];
     				add_flush_callback(() => updating_offsetL = false);
     			}
 
-    			if (!updating_offsetR && dirty & /*offsetR*/ 32) {
+    			if (!updating_offsetR && dirty & /*offsetR*/ 4) {
     				updating_offsetR = true;
-    				controls_changes.offsetR = /*offsetR*/ ctx[5];
+    				controls_changes.offsetR = /*offsetR*/ ctx[2];
     				add_flush_callback(() => updating_offsetR = false);
     			}
 
     			controls.$set(controls_changes);
-    			const data_1_changes = {};
-
-    			if (!updating_data && dirty & /*data*/ 2) {
-    				updating_data = true;
-    				data_1_changes.data = /*data*/ ctx[1];
-    				add_flush_callback(() => updating_data = false);
-    			}
-
-    			data_1.$set(data_1_changes);
-    			const graphs_changes = {};
-
-    			if (!updating_rocketData && dirty & /*dataOverTime*/ 8) {
-    				updating_rocketData = true;
-    				graphs_changes.rocketData = /*dataOverTime*/ ctx[3];
-    				add_flush_callback(() => updating_rocketData = false);
-    			}
-
-    			if (!updating_dataWindow && dirty & /*maxDataPoints*/ 4) {
-    				updating_dataWindow = true;
-    				graphs_changes.dataWindow = /*maxDataPoints*/ ctx[2];
-    				add_flush_callback(() => updating_dataWindow = false);
-    			}
-
-    			graphs.$set(graphs_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
     			transition_in(statedisp.$$.fragment, local);
     			transition_in(controls.$$.fragment, local);
-    			transition_in(data_1.$$.fragment, local);
-    			transition_in(graphs.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
     			transition_out(statedisp.$$.fragment, local);
     			transition_out(controls.$$.fragment, local);
-    			transition_out(data_1.$$.fragment, local);
-    			transition_out(graphs.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(main);
     			destroy_component(statedisp);
     			destroy_component(controls);
-    			destroy_component(data_1);
-    			destroy_component(graphs);
     		}
     	};
 
@@ -16431,8 +16561,8 @@ var app = (function () {
     		if (msg.command == "data") {
     			//console.log(msg)
     			if (typeof msg.data !== "undefined" && msg.data.split("=")[0].includes("Offsets")) {
-    				$$invalidate(4, offsetL = msg.data.split("=")[1].split(",")[0]);
-    				$$invalidate(5, offsetR = msg.data.split("=")[1].split(",")[1]);
+    				$$invalidate(1, offsetL = msg.data.split("=")[1].split(",")[0]);
+    				$$invalidate(2, offsetR = msg.data.split("=")[1].split(",")[1]);
     			} //console.log(offsetL)
     			//console.log(offsetR)
     		}
@@ -16454,6 +16584,11 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
+    	function statedisp_connectedToRadio_binding(value) {
+    		connectedToRadio = value;
+    		$$invalidate(0, connectedToRadio);
+    	}
+
     	function controls_connectedToRadio_binding(value) {
     		connectedToRadio = value;
     		$$invalidate(0, connectedToRadio);
@@ -16461,31 +16596,16 @@ var app = (function () {
 
     	function controls_offsetL_binding(value) {
     		offsetL = value;
-    		$$invalidate(4, offsetL);
+    		$$invalidate(1, offsetL);
     	}
 
     	function controls_offsetR_binding(value) {
     		offsetR = value;
-    		$$invalidate(5, offsetR);
-    	}
-
-    	function data_1_data_binding(value) {
-    		data = value;
-    		$$invalidate(1, data);
-    	}
-
-    	function graphs_rocketData_binding(value) {
-    		dataOverTime = value;
-    		$$invalidate(3, dataOverTime);
-    	}
-
-    	function graphs_dataWindow_binding(value) {
-    		maxDataPoints = value;
-    		$$invalidate(2, maxDataPoints);
+    		$$invalidate(2, offsetR);
     	}
 
     	$$self.$set = $$props => {
-    		if ("name" in $$props) $$invalidate(7, name = $$props.name);
+    		if ("name" in $$props) $$invalidate(4, name = $$props.name);
     	};
 
     	$$self.$capture_state = () => ({
@@ -16507,14 +16627,14 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("name" in $$props) $$invalidate(7, name = $$props.name);
+    		if ("name" in $$props) $$invalidate(4, name = $$props.name);
     		if ("connectedToRadio" in $$props) $$invalidate(0, connectedToRadio = $$props.connectedToRadio);
-    		if ("data" in $$props) $$invalidate(1, data = $$props.data);
-    		if ("maxDataPoints" in $$props) $$invalidate(2, maxDataPoints = $$props.maxDataPoints);
-    		if ("dataOverTime" in $$props) $$invalidate(3, dataOverTime = $$props.dataOverTime);
-    		if ("offsetL" in $$props) $$invalidate(4, offsetL = $$props.offsetL);
-    		if ("offsetR" in $$props) $$invalidate(5, offsetR = $$props.offsetR);
-    		if ("state" in $$props) $$invalidate(6, state = $$props.state);
+    		if ("data" in $$props) data = $$props.data;
+    		if ("maxDataPoints" in $$props) maxDataPoints = $$props.maxDataPoints;
+    		if ("dataOverTime" in $$props) dataOverTime = $$props.dataOverTime;
+    		if ("offsetL" in $$props) $$invalidate(1, offsetL = $$props.offsetL);
+    		if ("offsetR" in $$props) $$invalidate(2, offsetR = $$props.offsetR);
+    		if ("state" in $$props) $$invalidate(3, state = $$props.state);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -16523,26 +16643,24 @@ var app = (function () {
 
     	return [
     		connectedToRadio,
-    		data,
-    		maxDataPoints,
-    		dataOverTime,
     		offsetL,
     		offsetR,
     		state,
     		name,
+    		data,
+    		maxDataPoints,
+    		dataOverTime,
+    		statedisp_connectedToRadio_binding,
     		controls_connectedToRadio_binding,
     		controls_offsetL_binding,
-    		controls_offsetR_binding,
-    		data_1_data_binding,
-    		graphs_rocketData_binding,
-    		graphs_dataWindow_binding
+    		controls_offsetR_binding
     	];
     }
 
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$c, create_fragment$c, safe_not_equal, { name: 7 });
+    		init(this, options, instance$c, create_fragment$c, safe_not_equal, { name: 4 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -16554,7 +16672,7 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*name*/ ctx[7] === undefined && !("name" in props)) {
+    		if (/*name*/ ctx[4] === undefined && !("name" in props)) {
     			console.warn("<App> was created without expected prop 'name'");
     		}
     	}

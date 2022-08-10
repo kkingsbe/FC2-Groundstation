@@ -55,27 +55,32 @@ export let offsetL
 </script>
 
 <controls>
-    <div class={connectBtnClass} on:click={toggleRadio}>
+    <!--div class={connectBtnClass} on:click={toggleRadio}>
         <p>{connectBtnText}</p>
+    </div-->
+    <div class="row">
+        <div class="btn callib-gyro">
+            <p>Calibrate</p>
+        </div>
+        <div class="btn fintest">
+            <p>Fin Test</p>
+        </div>
+        <div class="btn finoffset" on:click={() => {modFinOffset = true}} on:click={getOffsets}>
+            <p>Fin Offset</p>
+        </div>
     </div>
-    <div class="btn callib-gyro">
-        <p>Callibrate Gyro</p>
+    <div class="row">
+        <div class="btn begintest" on:click={beginTest}>
+            <p>Begin Test</p>
+        </div>
+        <div class="btn reset" on:click={reset}>
+            <p>Reset</p>
+        </div>
+        <div class="btn arm">
+            <p>Arm</p>
+        </div>
     </div>
-    <div class="btn fintest">
-        <p>Fin Test</p>
-    </div>
-    <div class="btn finoffset" on:click={() => {modFinOffset = true}} on:click={getOffsets}>
-        <p>Fin Offset</p>
-    </div>
-    <div class="btn begintest" on:click={beginTest}>
-        <p>Begin Test</p>
-    </div>
-    <div class="btn reset" on:click={reset}>
-        <p>Reset</p>
-    </div>
-    <div class="btn arm">
-        <p>Arm</p>
-    </div>
+    
     {#if modFinOffset}
     <div class="modal">
         <FinOffsetModal bind:modFinOffset={modFinOffset} bind:offsetL={offsetL} bind:offsetR={offsetR}></FinOffsetModal>
@@ -87,9 +92,17 @@ export let offsetL
     controls {
         display: flex;
         flex-direction: column;
+        justify-content: center;
         align-items: center;
-        justify-content: space-evenly;
-        height: 60%;
+        width: 100%;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 20px;
     }
 
     .modal {
@@ -111,6 +124,7 @@ export let offsetL
     .btn {
         width: 10vw;
         height: 3vw;
+        margin: 0px 10px 0px 10px;
         font-size: 1.5vw;
         border-radius: 0.4vw;
         display: flex;
@@ -119,7 +133,7 @@ export let offsetL
         box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         color: white;
         cursor: pointer;
-        margin-bottom: 1vw;
+        background: #6419E6;
     }
 
     .connect {
@@ -128,29 +142,5 @@ export let offsetL
 
     .disconnect {
         background: #e24949;
-    }
-
-    .callib-gyro {
-        background: linear-gradient(45deg, #7F00FF, #E100FF);
-    }
-
-    .fintest {
-        background: linear-gradient(45deg, #7F00FF, #E100FF);
-    }    
-    
-    .finoffset {
-        background: linear-gradient(45deg, #7F00FF, #E100FF);
-    }
-
-    .arm {
-        background: linear-gradient(45deg, #7F00FF, #E100FF);
-    }
-
-    .begintest {
-        background: linear-gradient(45deg, #7F00FF, #E100FF);
-    }
-
-    .reset {
-        background: linear-gradient(45deg, #7F00FF, #E100FF);
     }
 </style>
