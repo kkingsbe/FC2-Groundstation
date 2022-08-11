@@ -1,8 +1,11 @@
 <script>
     export let connectedToRadio
+    export let radioDisconnected
+
     let ports = []
     var connectBtnText = "Connect"
     var connectBtnClass = "btn connect"
+
     $:if(connectedToRadio) {
         connectBtnText = "Disconnect"
         connectBtnClass = "btn disconnect"
@@ -35,6 +38,7 @@
             window.api.send("toMain", {command: "startRadio"});
         } else {
             connectedToRadio = false
+            radioDisconnected()
             window.api.send("toMain", {command: "endRadio"});
         }
     }

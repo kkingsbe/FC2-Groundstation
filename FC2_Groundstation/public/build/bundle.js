@@ -464,14 +464,14 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[5] = list[i];
+    	child_ctx[6] = list[i];
     	return child_ctx;
     }
 
-    // (48:8) {#each ports as port}
+    // (52:8) {#each ports as port}
     function create_each_block(ctx) {
     	let option;
-    	let t_value = /*port*/ ctx[5] + "";
+    	let t_value = /*port*/ ctx[6] + "";
     	let t;
 
     	const block = {
@@ -480,14 +480,14 @@ var app = (function () {
     			t = text(t_value);
     			option.__value = "port";
     			option.value = option.__value;
-    			add_location(option, file, 48, 8, 1319);
+    			add_location(option, file, 52, 8, 1390);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
     			append_dev(option, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*ports*/ 1 && t_value !== (t_value = /*port*/ ctx[5] + "")) set_data_dev(t, t_value);
+    			if (dirty & /*ports*/ 1 && t_value !== (t_value = /*port*/ ctx[6] + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(option);
@@ -498,7 +498,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(48:8) {#each ports as port}",
+    		source: "(52:8) {#each ports as port}",
     		ctx
     	});
 
@@ -535,12 +535,12 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			add_location(p, file, 44, 8, 1184);
+    			add_location(p, file, 48, 8, 1255);
     			attr_dev(div, "class", div_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[2]) + " svelte-6cl3we"));
-    			add_location(div, file, 43, 4, 1122);
-    			add_location(select, file, 46, 4, 1225);
+    			add_location(div, file, 47, 4, 1193);
+    			add_location(select, file, 50, 4, 1296);
     			attr_dev(comportselect, "class", "svelte-6cl3we");
-    			add_location(comportselect, file, 42, 0, 1101);
+    			add_location(comportselect, file, 46, 0, 1172);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -625,6 +625,7 @@ var app = (function () {
 
     function instance($$self, $$props, $$invalidate) {
     	let { connectedToRadio } = $$props;
+    	let { radioDisconnected } = $$props;
     	let ports = [];
     	var connectBtnText = "Connect";
     	var connectBtnClass = "btn connect";
@@ -643,11 +644,12 @@ var app = (function () {
     			window.api.send("toMain", { command: "startRadio" });
     		} else {
     			$$invalidate(4, connectedToRadio = false);
+    			radioDisconnected();
     			window.api.send("toMain", { command: "endRadio" });
     		}
     	}
 
-    	const writable_props = ["connectedToRadio"];
+    	const writable_props = ["connectedToRadio", "radioDisconnected"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<ComPortSelect> was created with unknown prop '${key}'`);
@@ -655,10 +657,12 @@ var app = (function () {
 
     	$$self.$set = $$props => {
     		if ("connectedToRadio" in $$props) $$invalidate(4, connectedToRadio = $$props.connectedToRadio);
+    		if ("radioDisconnected" in $$props) $$invalidate(5, radioDisconnected = $$props.radioDisconnected);
     	};
 
     	$$self.$capture_state = () => ({
     		connectedToRadio,
+    		radioDisconnected,
     		ports,
     		connectBtnText,
     		connectBtnClass,
@@ -670,6 +674,7 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ("connectedToRadio" in $$props) $$invalidate(4, connectedToRadio = $$props.connectedToRadio);
+    		if ("radioDisconnected" in $$props) $$invalidate(5, radioDisconnected = $$props.radioDisconnected);
     		if ("ports" in $$props) $$invalidate(0, ports = $$props.ports);
     		if ("connectBtnText" in $$props) $$invalidate(1, connectBtnText = $$props.connectBtnText);
     		if ("connectBtnClass" in $$props) $$invalidate(2, connectBtnClass = $$props.connectBtnClass);
@@ -691,13 +696,24 @@ var app = (function () {
     		}
     	};
 
-    	return [ports, connectBtnText, connectBtnClass, toggleRadio, connectedToRadio];
+    	return [
+    		ports,
+    		connectBtnText,
+    		connectBtnClass,
+    		toggleRadio,
+    		connectedToRadio,
+    		radioDisconnected
+    	];
     }
 
     class ComPortSelect extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, { connectedToRadio: 4 });
+
+    		init(this, options, instance, create_fragment, safe_not_equal, {
+    			connectedToRadio: 4,
+    			radioDisconnected: 5
+    		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -712,6 +728,10 @@ var app = (function () {
     		if (/*connectedToRadio*/ ctx[4] === undefined && !("connectedToRadio" in props)) {
     			console.warn("<ComPortSelect> was created without expected prop 'connectedToRadio'");
     		}
+
+    		if (/*radioDisconnected*/ ctx[5] === undefined && !("radioDisconnected" in props)) {
+    			console.warn("<ComPortSelect> was created without expected prop 'radioDisconnected'");
+    		}
     	}
 
     	get connectedToRadio() {
@@ -719,6 +739,14 @@ var app = (function () {
     	}
 
     	set connectedToRadio(value) {
+    		throw new Error("<ComPortSelect>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get radioDisconnected() {
+    		throw new Error("<ComPortSelect>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set radioDisconnected(value) {
     		throw new Error("<ComPortSelect>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -736,10 +764,12 @@ var app = (function () {
     	let current;
 
     	function comportselect_connectedToRadio_binding(value) {
-    		/*comportselect_connectedToRadio_binding*/ ctx[2].call(null, value);
+    		/*comportselect_connectedToRadio_binding*/ ctx[3].call(null, value);
     	}
 
-    	let comportselect_props = {};
+    	let comportselect_props = {
+    		radioDisconnected: /*radioDisconnected*/ ctx[2]
+    	};
 
     	if (/*connectedToRadio*/ ctx[0] !== void 0) {
     		comportselect_props.connectedToRadio = /*connectedToRadio*/ ctx[0];
@@ -760,9 +790,10 @@ var app = (function () {
     			t1 = text(/*state*/ ctx[1]);
     			t2 = space();
     			create_component(comportselect.$$.fragment);
-    			add_location(p, file$1, 8, 4, 159);
-    			attr_dev(statedisp, "class", "svelte-133qq3b");
-    			add_location(statedisp, file$1, 7, 0, 142);
+    			attr_dev(p, "class", "svelte-y89027");
+    			add_location(p, file$1, 9, 4, 193);
+    			attr_dev(statedisp, "class", "svelte-y89027");
+    			add_location(statedisp, file$1, 8, 0, 176);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -779,6 +810,7 @@ var app = (function () {
     		p: function update(ctx, [dirty]) {
     			if (!current || dirty & /*state*/ 2) set_data_dev(t1, /*state*/ ctx[1]);
     			const comportselect_changes = {};
+    			if (dirty & /*radioDisconnected*/ 4) comportselect_changes.radioDisconnected = /*radioDisconnected*/ ctx[2];
 
     			if (!updating_connectedToRadio && dirty & /*connectedToRadio*/ 1) {
     				updating_connectedToRadio = true;
@@ -817,7 +849,8 @@ var app = (function () {
     function instance$1($$self, $$props, $$invalidate) {
     	let { state } = $$props;
     	let { connectedToRadio } = $$props;
-    	const writable_props = ["state", "connectedToRadio"];
+    	let { radioDisconnected } = $$props;
+    	const writable_props = ["state", "connectedToRadio", "radioDisconnected"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<StateDisp> was created with unknown prop '${key}'`);
@@ -831,26 +864,43 @@ var app = (function () {
     	$$self.$set = $$props => {
     		if ("state" in $$props) $$invalidate(1, state = $$props.state);
     		if ("connectedToRadio" in $$props) $$invalidate(0, connectedToRadio = $$props.connectedToRadio);
+    		if ("radioDisconnected" in $$props) $$invalidate(2, radioDisconnected = $$props.radioDisconnected);
     	};
 
-    	$$self.$capture_state = () => ({ state, connectedToRadio, ComPortSelect });
+    	$$self.$capture_state = () => ({
+    		state,
+    		connectedToRadio,
+    		radioDisconnected,
+    		ComPortSelect
+    	});
 
     	$$self.$inject_state = $$props => {
     		if ("state" in $$props) $$invalidate(1, state = $$props.state);
     		if ("connectedToRadio" in $$props) $$invalidate(0, connectedToRadio = $$props.connectedToRadio);
+    		if ("radioDisconnected" in $$props) $$invalidate(2, radioDisconnected = $$props.radioDisconnected);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [connectedToRadio, state, comportselect_connectedToRadio_binding];
+    	return [
+    		connectedToRadio,
+    		state,
+    		radioDisconnected,
+    		comportselect_connectedToRadio_binding
+    	];
     }
 
     class StateDisp extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { state: 1, connectedToRadio: 0 });
+
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {
+    			state: 1,
+    			connectedToRadio: 0,
+    			radioDisconnected: 2
+    		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -869,6 +919,10 @@ var app = (function () {
     		if (/*connectedToRadio*/ ctx[0] === undefined && !("connectedToRadio" in props)) {
     			console.warn("<StateDisp> was created without expected prop 'connectedToRadio'");
     		}
+
+    		if (/*radioDisconnected*/ ctx[2] === undefined && !("radioDisconnected" in props)) {
+    			console.warn("<StateDisp> was created without expected prop 'radioDisconnected'");
+    		}
     	}
 
     	get state() {
@@ -884,6 +938,14 @@ var app = (function () {
     	}
 
     	set connectedToRadio(value) {
+    		throw new Error("<StateDisp>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get radioDisconnected() {
+    		throw new Error("<StateDisp>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set radioDisconnected(value) {
     		throw new Error("<StateDisp>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -15327,14 +15389,14 @@ var app = (function () {
 
     function get_each_context$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[5] = list[i];
+    	child_ctx[6] = list[i];
     	return child_ctx;
     }
 
-    // (48:8) {#each ports as port}
+    // (52:8) {#each ports as port}
     function create_each_block$1(ctx) {
     	let option;
-    	let t_value = /*port*/ ctx[5] + "";
+    	let t_value = /*port*/ ctx[6] + "";
     	let t;
 
     	const block = {
@@ -15343,14 +15405,14 @@ var app = (function () {
     			t = text(t_value);
     			option.__value = "port";
     			option.value = option.__value;
-    			add_location(option, file$7, 48, 8, 1319);
+    			add_location(option, file$7, 52, 8, 1390);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
     			append_dev(option, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*ports*/ 1 && t_value !== (t_value = /*port*/ ctx[5] + "")) set_data_dev(t, t_value);
+    			if (dirty & /*ports*/ 1 && t_value !== (t_value = /*port*/ ctx[6] + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(option);
@@ -15361,7 +15423,7 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(48:8) {#each ports as port}",
+    		source: "(52:8) {#each ports as port}",
     		ctx
     	});
 
@@ -15398,12 +15460,12 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			add_location(p, file$7, 44, 8, 1184);
+    			add_location(p, file$7, 48, 8, 1255);
     			attr_dev(div, "class", div_class_value = "" + (null_to_empty(/*connectBtnClass*/ ctx[2]) + " svelte-6cl3we"));
-    			add_location(div, file$7, 43, 4, 1122);
-    			add_location(select, file$7, 46, 4, 1225);
+    			add_location(div, file$7, 47, 4, 1193);
+    			add_location(select, file$7, 50, 4, 1296);
     			attr_dev(comportselect, "class", "svelte-6cl3we");
-    			add_location(comportselect, file$7, 42, 0, 1101);
+    			add_location(comportselect, file$7, 46, 0, 1172);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -15488,6 +15550,7 @@ var app = (function () {
 
     function instance$8($$self, $$props, $$invalidate) {
     	let { connectedToRadio } = $$props;
+    	let { radioDisconnected } = $$props;
     	let ports = [];
     	var connectBtnText = "Connect";
     	var connectBtnClass = "btn connect";
@@ -15506,11 +15569,12 @@ var app = (function () {
     			window.api.send("toMain", { command: "startRadio" });
     		} else {
     			$$invalidate(4, connectedToRadio = false);
+    			radioDisconnected();
     			window.api.send("toMain", { command: "endRadio" });
     		}
     	}
 
-    	const writable_props = ["connectedToRadio"];
+    	const writable_props = ["connectedToRadio", "radioDisconnected"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<ComPortSelect> was created with unknown prop '${key}'`);
@@ -15518,10 +15582,12 @@ var app = (function () {
 
     	$$self.$set = $$props => {
     		if ("connectedToRadio" in $$props) $$invalidate(4, connectedToRadio = $$props.connectedToRadio);
+    		if ("radioDisconnected" in $$props) $$invalidate(5, radioDisconnected = $$props.radioDisconnected);
     	};
 
     	$$self.$capture_state = () => ({
     		connectedToRadio,
+    		radioDisconnected,
     		ports,
     		connectBtnText,
     		connectBtnClass,
@@ -15533,6 +15599,7 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ("connectedToRadio" in $$props) $$invalidate(4, connectedToRadio = $$props.connectedToRadio);
+    		if ("radioDisconnected" in $$props) $$invalidate(5, radioDisconnected = $$props.radioDisconnected);
     		if ("ports" in $$props) $$invalidate(0, ports = $$props.ports);
     		if ("connectBtnText" in $$props) $$invalidate(1, connectBtnText = $$props.connectBtnText);
     		if ("connectBtnClass" in $$props) $$invalidate(2, connectBtnClass = $$props.connectBtnClass);
@@ -15554,13 +15621,24 @@ var app = (function () {
     		}
     	};
 
-    	return [ports, connectBtnText, connectBtnClass, toggleRadio, connectedToRadio];
+    	return [
+    		ports,
+    		connectBtnText,
+    		connectBtnClass,
+    		toggleRadio,
+    		connectedToRadio,
+    		radioDisconnected
+    	];
     }
 
     class ComPortSelect$1 extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$8, create_fragment$8, safe_not_equal, { connectedToRadio: 4 });
+
+    		init(this, options, instance$8, create_fragment$8, safe_not_equal, {
+    			connectedToRadio: 4,
+    			radioDisconnected: 5
+    		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -15575,6 +15653,10 @@ var app = (function () {
     		if (/*connectedToRadio*/ ctx[4] === undefined && !("connectedToRadio" in props)) {
     			console.warn("<ComPortSelect> was created without expected prop 'connectedToRadio'");
     		}
+
+    		if (/*radioDisconnected*/ ctx[5] === undefined && !("radioDisconnected" in props)) {
+    			console.warn("<ComPortSelect> was created without expected prop 'radioDisconnected'");
+    		}
     	}
 
     	get connectedToRadio() {
@@ -15584,6 +15666,14 @@ var app = (function () {
     	set connectedToRadio(value) {
     		throw new Error("<ComPortSelect>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get radioDisconnected() {
+    		throw new Error("<ComPortSelect>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set radioDisconnected(value) {
+    		throw new Error("<ComPortSelect>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* src\components\Controls.svelte generated by Svelte v3.19.1 */
@@ -15591,7 +15681,7 @@ var app = (function () {
     const { console: console_1$2 } = globals;
     const file$8 = "src\\components\\Controls.svelte";
 
-    // (84:4) {#if modFinOffset}
+    // (71:4) {#if modFinOffset}
     function create_if_block(ctx) {
     	let div;
     	let updating_modFinOffset;
@@ -15600,15 +15690,15 @@ var app = (function () {
     	let current;
 
     	function finoffsetmodal_modFinOffset_binding(value) {
-    		/*finoffsetmodal_modFinOffset_binding*/ ctx[11].call(null, value);
+    		/*finoffsetmodal_modFinOffset_binding*/ ctx[9].call(null, value);
     	}
 
     	function finoffsetmodal_offsetL_binding(value) {
-    		/*finoffsetmodal_offsetL_binding*/ ctx[12].call(null, value);
+    		/*finoffsetmodal_offsetL_binding*/ ctx[10].call(null, value);
     	}
 
     	function finoffsetmodal_offsetR_binding(value) {
-    		/*finoffsetmodal_offsetR_binding*/ ctx[13].call(null, value);
+    		/*finoffsetmodal_offsetR_binding*/ ctx[11].call(null, value);
     	}
 
     	let finoffsetmodal_props = {};
@@ -15639,7 +15729,7 @@ var app = (function () {
     			div = element("div");
     			create_component(finoffsetmodal.$$.fragment);
     			attr_dev(div, "class", "modal svelte-14fcpxx");
-    			add_location(div, file$8, 84, 4, 2201);
+    			add_location(div, file$8, 71, 4, 1879);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -15688,7 +15778,7 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(84:4) {#if modFinOffset}",
+    		source: "(71:4) {#if modFinOffset}",
     		ctx
     	});
 
@@ -15751,30 +15841,30 @@ var app = (function () {
     			p5.textContent = "Arm";
     			t11 = space();
     			if (if_block) if_block.c();
-    			add_location(p0, file$8, 62, 12, 1593);
+    			add_location(p0, file$8, 49, 12, 1252);
     			attr_dev(div0, "class", "btn callib-gyro svelte-14fcpxx");
-    			add_location(div0, file$8, 61, 8, 1550);
-    			add_location(p1, file$8, 65, 12, 1674);
+    			add_location(div0, file$8, 48, 8, 1188);
+    			add_location(p1, file$8, 52, 12, 1352);
     			attr_dev(div1, "class", "btn fintest svelte-14fcpxx");
-    			add_location(div1, file$8, 64, 8, 1635);
-    			add_location(p2, file$8, 68, 12, 1817);
+    			add_location(div1, file$8, 51, 8, 1294);
+    			add_location(p2, file$8, 55, 12, 1495);
     			attr_dev(div2, "class", "btn finoffset svelte-14fcpxx");
-    			add_location(div2, file$8, 67, 8, 1715);
+    			add_location(div2, file$8, 54, 8, 1393);
     			attr_dev(div3, "class", "row svelte-14fcpxx");
-    			add_location(div3, file$8, 60, 4, 1523);
-    			add_location(p3, file$8, 73, 12, 1957);
+    			add_location(div3, file$8, 47, 4, 1161);
+    			add_location(p3, file$8, 60, 12, 1635);
     			attr_dev(div4, "class", "btn begintest svelte-14fcpxx");
-    			add_location(div4, file$8, 72, 8, 1895);
-    			add_location(p4, file$8, 76, 12, 2054);
+    			add_location(div4, file$8, 59, 8, 1573);
+    			add_location(p4, file$8, 63, 12, 1732);
     			attr_dev(div5, "class", "btn reset svelte-14fcpxx");
-    			add_location(div5, file$8, 75, 8, 2000);
-    			add_location(p5, file$8, 79, 12, 2127);
+    			add_location(div5, file$8, 62, 8, 1678);
+    			add_location(p5, file$8, 66, 12, 1805);
     			attr_dev(div6, "class", "btn arm svelte-14fcpxx");
-    			add_location(div6, file$8, 78, 8, 2092);
+    			add_location(div6, file$8, 65, 8, 1770);
     			attr_dev(div7, "class", "row svelte-14fcpxx");
-    			add_location(div7, file$8, 71, 4, 1868);
+    			add_location(div7, file$8, 58, 4, 1546);
     			attr_dev(controls, "class", "svelte-14fcpxx");
-    			add_location(controls, file$8, 56, 0, 1399);
+    			add_location(controls, file$8, 43, 0, 1037);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -15805,7 +15895,9 @@ var app = (function () {
     			current = true;
 
     			dispose = [
-    				listen_dev(div2, "click", /*click_handler*/ ctx[10], false, false, false),
+    				listen_dev(div0, "click", calibrate, false, false, false),
+    				listen_dev(div1, "click", finTest, false, false, false),
+    				listen_dev(div2, "click", /*click_handler*/ ctx[8], false, false, false),
     				listen_dev(div2, "click", /*getOffsets*/ ctx[3], false, false, false),
     				listen_dev(div4, "click", beginTest, false, false, false),
     				listen_dev(div5, "click", reset, false, false, false)
@@ -15859,6 +15951,14 @@ var app = (function () {
     	return block;
     }
 
+    function calibrate() {
+    	window.api.send("toMain", { command: "calibrate" });
+    }
+
+    function finTest() {
+    	window.api.send("toMain", { command: "finTest" });
+    }
+
     function beginTest() {
     	window.api.send("toMain", { command: "beginTest" });
     }
@@ -15868,23 +15968,12 @@ var app = (function () {
     }
 
     function instance$9($$self, $$props, $$invalidate) {
-    	let { connectedToRadio } = $$props;
     	let { offsetL } = $$props;
     	let { offsetR } = $$props;
     	var awaitingOffsets = false;
     	var connectBtnText = "Connect";
     	var connectBtnClass = "btn connect";
     	var modFinOffset = false;
-
-    	function toggleRadio() {
-    		if (!connectedToRadio) {
-    			$$invalidate(4, connectedToRadio = true);
-    			window.api.send("toMain", { command: "startRadio" });
-    		} else {
-    			$$invalidate(4, connectedToRadio = false);
-    			window.api.send("toMain", { command: "endRadio" });
-    		}
-    	}
 
     	async function getOffsets() {
     		window.api.send("toMain", { command: "getOffsets" });
@@ -15897,7 +15986,7 @@ var app = (function () {
     		console.log(`L: ${offsetL}, R: ${offsetR}`);
     	}
 
-    	const writable_props = ["connectedToRadio", "offsetL", "offsetR"];
+    	const writable_props = ["offsetL", "offsetR"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$2.warn(`<Controls> was created with unknown prop '${key}'`);
@@ -15923,13 +16012,11 @@ var app = (function () {
     	}
 
     	$$self.$set = $$props => {
-    		if ("connectedToRadio" in $$props) $$invalidate(4, connectedToRadio = $$props.connectedToRadio);
     		if ("offsetL" in $$props) $$invalidate(0, offsetL = $$props.offsetL);
     		if ("offsetR" in $$props) $$invalidate(1, offsetR = $$props.offsetR);
     	};
 
     	$$self.$capture_state = () => ({
-    		connectedToRadio,
     		offsetL,
     		offsetR,
     		awaitingOffsets,
@@ -15938,8 +16025,9 @@ var app = (function () {
     		connectBtnText,
     		connectBtnClass,
     		modFinOffset,
-    		toggleRadio,
     		getOffsets,
+    		calibrate,
+    		finTest,
     		updateOffsets,
     		beginTest,
     		reset,
@@ -15948,7 +16036,6 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("connectedToRadio" in $$props) $$invalidate(4, connectedToRadio = $$props.connectedToRadio);
     		if ("offsetL" in $$props) $$invalidate(0, offsetL = $$props.offsetL);
     		if ("offsetR" in $$props) $$invalidate(1, offsetR = $$props.offsetR);
     		if ("awaitingOffsets" in $$props) awaitingOffsets = $$props.awaitingOffsets;
@@ -15962,16 +16049,6 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*connectedToRadio*/ 16) {
-    			 if (connectedToRadio) {
-    				connectBtnText = "Disconnect";
-    				connectBtnClass = "btn disconnect";
-    			} else {
-    				connectBtnText = "Connect";
-    				connectBtnClass = "btn connect";
-    			}
-    		}
-
     		if ($$self.$$.dirty & /*offsetL*/ 1) {
     			 (updateOffsets());
     		}
@@ -15982,11 +16059,9 @@ var app = (function () {
     		offsetR,
     		modFinOffset,
     		getOffsets,
-    		connectedToRadio,
     		awaitingOffsets,
     		connectBtnText,
     		connectBtnClass,
-    		toggleRadio,
     		updateOffsets,
     		click_handler,
     		finoffsetmodal_modFinOffset_binding,
@@ -15998,12 +16073,7 @@ var app = (function () {
     class Controls extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-
-    		init(this, options, instance$9, create_fragment$9, safe_not_equal, {
-    			connectedToRadio: 4,
-    			offsetL: 0,
-    			offsetR: 1
-    		});
+    		init(this, options, instance$9, create_fragment$9, safe_not_equal, { offsetL: 0, offsetR: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -16015,10 +16085,6 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*connectedToRadio*/ ctx[4] === undefined && !("connectedToRadio" in props)) {
-    			console_1$2.warn("<Controls> was created without expected prop 'connectedToRadio'");
-    		}
-
     		if (/*offsetL*/ ctx[0] === undefined && !("offsetL" in props)) {
     			console_1$2.warn("<Controls> was created without expected prop 'offsetL'");
     		}
@@ -16026,14 +16092,6 @@ var app = (function () {
     		if (/*offsetR*/ ctx[1] === undefined && !("offsetR" in props)) {
     			console_1$2.warn("<Controls> was created without expected prop 'offsetR'");
     		}
-    	}
-
-    	get connectedToRadio() {
-    		throw new Error("<Controls>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set connectedToRadio(value) {
-    		throw new Error("<Controls>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	get offsetL() {
@@ -16400,6 +16458,8 @@ var app = (function () {
     }
 
     /* src\App.svelte generated by Svelte v3.19.1 */
+
+    const { console: console_1$3 } = globals;
     const file$b = "src\\App.svelte";
 
     function create_fragment$c(ctx) {
@@ -16407,16 +16467,18 @@ var app = (function () {
     	let updating_connectedToRadio;
     	let t;
     	let div;
-    	let updating_connectedToRadio_1;
     	let updating_offsetL;
     	let updating_offsetR;
     	let current;
 
     	function statedisp_connectedToRadio_binding(value) {
-    		/*statedisp_connectedToRadio_binding*/ ctx[8].call(null, value);
+    		/*statedisp_connectedToRadio_binding*/ ctx[12].call(null, value);
     	}
 
-    	let statedisp_props = { state: /*state*/ ctx[3] };
+    	let statedisp_props = {
+    		state: /*state*/ ctx[3],
+    		radioDisconnected: /*radioDisconnected*/ ctx[4]
+    	};
 
     	if (/*connectedToRadio*/ ctx[0] !== void 0) {
     		statedisp_props.connectedToRadio = /*connectedToRadio*/ ctx[0];
@@ -16425,23 +16487,15 @@ var app = (function () {
     	const statedisp = new StateDisp({ props: statedisp_props, $$inline: true });
     	binding_callbacks.push(() => bind(statedisp, "connectedToRadio", statedisp_connectedToRadio_binding));
 
-    	function controls_connectedToRadio_binding(value) {
-    		/*controls_connectedToRadio_binding*/ ctx[9].call(null, value);
-    	}
-
     	function controls_offsetL_binding(value) {
-    		/*controls_offsetL_binding*/ ctx[10].call(null, value);
+    		/*controls_offsetL_binding*/ ctx[13].call(null, value);
     	}
 
     	function controls_offsetR_binding(value) {
-    		/*controls_offsetR_binding*/ ctx[11].call(null, value);
+    		/*controls_offsetR_binding*/ ctx[14].call(null, value);
     	}
 
     	let controls_props = {};
-
-    	if (/*connectedToRadio*/ ctx[0] !== void 0) {
-    		controls_props.connectedToRadio = /*connectedToRadio*/ ctx[0];
-    	}
 
     	if (/*offsetL*/ ctx[1] !== void 0) {
     		controls_props.offsetL = /*offsetL*/ ctx[1];
@@ -16452,7 +16506,6 @@ var app = (function () {
     	}
 
     	const controls = new Controls({ props: controls_props, $$inline: true });
-    	binding_callbacks.push(() => bind(controls, "connectedToRadio", controls_connectedToRadio_binding));
     	binding_callbacks.push(() => bind(controls, "offsetL", controls_offsetL_binding));
     	binding_callbacks.push(() => bind(controls, "offsetR", controls_offsetR_binding));
 
@@ -16464,9 +16517,9 @@ var app = (function () {
     			div = element("div");
     			create_component(controls.$$.fragment);
     			attr_dev(div, "class", "cont svelte-h27j7z");
-    			add_location(div, file$b, 45, 1, 1138);
+    			add_location(div, file$b, 98, 1, 2699);
     			attr_dev(main, "class", "svelte-h27j7z");
-    			add_location(main, file$b, 43, 0, 1054);
+    			add_location(main, file$b, 96, 0, 2571);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -16481,6 +16534,7 @@ var app = (function () {
     		},
     		p: function update(ctx, [dirty]) {
     			const statedisp_changes = {};
+    			if (dirty & /*state*/ 8) statedisp_changes.state = /*state*/ ctx[3];
 
     			if (!updating_connectedToRadio && dirty & /*connectedToRadio*/ 1) {
     				updating_connectedToRadio = true;
@@ -16490,12 +16544,6 @@ var app = (function () {
 
     			statedisp.$set(statedisp_changes);
     			const controls_changes = {};
-
-    			if (!updating_connectedToRadio_1 && dirty & /*connectedToRadio*/ 1) {
-    				updating_connectedToRadio_1 = true;
-    				controls_changes.connectedToRadio = /*connectedToRadio*/ ctx[0];
-    				add_flush_callback(() => updating_connectedToRadio_1 = false);
-    			}
 
     			if (!updating_offsetL && dirty & /*offsetL*/ 2) {
     				updating_offsetL = true;
@@ -16543,6 +16591,8 @@ var app = (function () {
     function instance$c($$self, $$props, $$invalidate) {
     	let { name } = $$props;
     	var connectedToRadio = false;
+    	var connectedToRocket = false;
+    	var previousState = "";
 
     	var data = {
     		rollRate: 0,
@@ -16559,37 +16609,88 @@ var app = (function () {
 
     	window.api.receive("fromMain", msg => {
     		if (msg.command == "data") {
-    			//console.log(msg)
-    			if (typeof msg.data !== "undefined" && msg.data.split("=")[0].includes("Offsets")) {
-    				$$invalidate(1, offsetL = msg.data.split("=")[1].split(",")[0]);
-    				$$invalidate(2, offsetR = msg.data.split("=")[1].split(",")[1]);
-    			} //console.log(offsetL)
-    			//console.log(offsetR)
+    			console.log(msg);
+
+    			//Display radio status
+    			if (msg.status == true && state == "Not Connected") $$invalidate(3, state = "Radio Initialized");
+
+    			if (msg.status == false) $$invalidate(3, state = "Radio Error");
+    			console.log(state);
+
+    			if (typeof msg.data !== "undefined") {
+    				console.log(msg.data);
+    				let command = msg.data.split("=")[0];
+    				console.log("Command: " + command);
+    				let value = msg.data.split("=")[1];
+    				console.log("Value: " + value);
+
+    				//Recieve offsets
+    				if (command == "Offsets(L,R)") {
+    					$$invalidate(1, offsetL = msg.data.split("=")[1].split(",")[0]);
+    					$$invalidate(2, offsetR = msg.data.split("=")[1].split(",")[1]);
+    				} //console.log(offsetL)
+    				//console.log(offsetR)
+
+    				if (command == "ping" && value == "pong") {
+    					$$invalidate(6, connectedToRocket = true);
+    					if (state == "Radio Initialized" || state == "Radio Disconnected") $$invalidate(3, state = "Connected to Rocket");
+    				}
+
+    				if (command == "calibrate" && value == "calibrating") {
+    					previousState = state;
+    					$$invalidate(3, state = "Calibrating Gyro");
+    				}
+
+    				if (command == "calibrate" && value == "complete") {
+    					$$invalidate(3, state = previousState);
+    				}
+
+    				if (command == "finTest" && value == "testing") {
+    					previousState = state;
+    					$$invalidate(3, state = "Testing Fins");
+    				}
+
+    				if (command == "finTest" && value == "complete") {
+    					$$invalidate(3, state = previousState);
+    				}
+    			}
     		}
     	});
 
+    	const radioDisconnected = () => {
+    		$$invalidate(3, state = "Not Connected");
+    	};
+
+    	//Read data from radio every second
     	setInterval(
     		function () {
     			if (connectedToRadio) {
+    				console.log("Gettin data");
     				window.api.send("toMain", { command: "readData" });
     			}
     		},
     		1000
     	);
 
-    	let state = "Awaiting Launch";
+    	//Preform a handshake with the rocket to make sure comms are established
+    	var handshakeInterval;
+
+    	handshakeInterval = setInterval(
+    		() => {
+    			console.log("Handshakin");
+    			window.api.send("toMain", { command: "handshake" });
+    		},
+    		3000
+    	);
+
+    	let state = "Not Connected";
     	const writable_props = ["name"];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<App> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$3.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
     	function statedisp_connectedToRadio_binding(value) {
-    		connectedToRadio = value;
-    		$$invalidate(0, connectedToRadio);
-    	}
-
-    	function controls_connectedToRadio_binding(value) {
     		connectedToRadio = value;
     		$$invalidate(0, connectedToRadio);
     	}
@@ -16605,7 +16706,7 @@ var app = (function () {
     	}
 
     	$$self.$set = $$props => {
-    		if ("name" in $$props) $$invalidate(4, name = $$props.name);
+    		if ("name" in $$props) $$invalidate(5, name = $$props.name);
     	};
 
     	$$self.$capture_state = () => ({
@@ -16616,24 +16717,33 @@ var app = (function () {
     		Controls,
     		Data,
     		connectedToRadio,
+    		connectedToRocket,
+    		previousState,
     		data,
     		maxDataPoints,
     		dataOverTime,
     		offsetL,
     		offsetR,
+    		radioDisconnected,
+    		handshakeInterval,
     		state,
     		window,
-    		setInterval
+    		console,
+    		setInterval,
+    		clearInterval
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("name" in $$props) $$invalidate(4, name = $$props.name);
+    		if ("name" in $$props) $$invalidate(5, name = $$props.name);
     		if ("connectedToRadio" in $$props) $$invalidate(0, connectedToRadio = $$props.connectedToRadio);
+    		if ("connectedToRocket" in $$props) $$invalidate(6, connectedToRocket = $$props.connectedToRocket);
+    		if ("previousState" in $$props) previousState = $$props.previousState;
     		if ("data" in $$props) data = $$props.data;
     		if ("maxDataPoints" in $$props) maxDataPoints = $$props.maxDataPoints;
     		if ("dataOverTime" in $$props) dataOverTime = $$props.dataOverTime;
     		if ("offsetL" in $$props) $$invalidate(1, offsetL = $$props.offsetL);
     		if ("offsetR" in $$props) $$invalidate(2, offsetR = $$props.offsetR);
+    		if ("handshakeInterval" in $$props) $$invalidate(8, handshakeInterval = $$props.handshakeInterval);
     		if ("state" in $$props) $$invalidate(3, state = $$props.state);
     	};
 
@@ -16641,17 +16751,28 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*connectedToRocket, handshakeInterval*/ 320) {
+    			 if (connectedToRocket) {
+    				clearInterval(handshakeInterval);
+    			}
+    		}
+    	};
+
     	return [
     		connectedToRadio,
     		offsetL,
     		offsetR,
     		state,
+    		radioDisconnected,
     		name,
+    		connectedToRocket,
+    		previousState,
+    		handshakeInterval,
     		data,
     		maxDataPoints,
     		dataOverTime,
     		statedisp_connectedToRadio_binding,
-    		controls_connectedToRadio_binding,
     		controls_offsetL_binding,
     		controls_offsetR_binding
     	];
@@ -16660,7 +16781,7 @@ var app = (function () {
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$c, create_fragment$c, safe_not_equal, { name: 4 });
+    		init(this, options, instance$c, create_fragment$c, safe_not_equal, { name: 5 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -16672,8 +16793,8 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*name*/ ctx[4] === undefined && !("name" in props)) {
-    			console.warn("<App> was created without expected prop 'name'");
+    		if (/*name*/ ctx[5] === undefined && !("name" in props)) {
+    			console_1$3.warn("<App> was created without expected prop 'name'");
     		}
     	}
 

@@ -72,11 +72,21 @@ ipcMain.on("toMain", async(event, args) => {
       case "readData":
         response = {
           command: "data",
-          data: radio.readData()
+          data: radio.readData(),
+          status: radio.status()
         }
         break
       case "startRadio":
         radio.start()
+        break
+      case "handshake":
+        radio.handshake()
+        break
+      case "calibrate":
+        radio.writeData("#calibrate")
+        break
+      case "finTest":
+        radio.writeData("#finTest")
         break
       case "getOffsets":
         radio.writeData("#getOffsets")

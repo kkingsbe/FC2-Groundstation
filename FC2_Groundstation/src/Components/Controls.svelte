@@ -1,6 +1,5 @@
 <script>
-    export let connectedToRadio
-export let offsetL
+    export let offsetL
     export let offsetR
 
     var awaitingOffsets = false
@@ -12,29 +11,17 @@ export let offsetL
     var connectBtnClass = "btn connect"
     var modFinOffset = false
 
-    $:if(connectedToRadio) {
-        connectBtnText = "Disconnect"
-        connectBtnClass = "btn disconnect"
-    } else {
-        connectBtnText = "Connect"
-        connectBtnClass = "btn connect"
-    }
-
-
-    function toggleRadio() {
-        if(!connectedToRadio) {
-            connectedToRadio = true
-            window.api.send("toMain", {command: "startRadio"});
-        } else {
-            connectedToRadio = false
-            window.api.send("toMain", {command: "endRadio"});
-        }
-
-    }
-
     async function getOffsets() {
         window.api.send("toMain", {command: "getOffsets"})
         awaitingOffsets = true
+    }
+
+    function calibrate() {
+        window.api.send("toMain", {command: "calibrate"})
+    }
+
+    function finTest() {
+        window.api.send("toMain", {command: "finTest"})
     }
 
     function updateOffsets() {
@@ -59,10 +46,10 @@ export let offsetL
         <p>{connectBtnText}</p>
     </div-->
     <div class="row">
-        <div class="btn callib-gyro">
+        <div class="btn callib-gyro" on:click={calibrate}>
             <p>Calibrate</p>
         </div>
-        <div class="btn fintest">
+        <div class="btn fintest" on:click={finTest}>
             <p>Fin Test</p>
         </div>
         <div class="btn finoffset" on:click={() => {modFinOffset = true}} on:click={getOffsets}>

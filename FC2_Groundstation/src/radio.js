@@ -1,10 +1,11 @@
 const SerialPort = require("serialport")
 
-const startupCode = "AT+ADDRESS=1\r\nAT+PARAMETER=12,7,1,4"
+const startupCode = "AT+ADDRESS=2\r\nAT+PARAMETER=12,7,1,4\r\n"
 var dataToParse = []
 var lastLine = ""
 var serialport
 var portOpen = false
+var radioErr = false
 var port
 
 const start = () => {
@@ -19,6 +20,7 @@ const start = () => {
         }
     })
     
+    //Configure event listener for when serial data is written from radio
     serialport.on("data", data => {
         let rawData = data.toString()
         let lines = rawData.split("\n")
@@ -42,29 +44,12 @@ const readData = () => {
     if(dataToParse.length > 0) { 
         let dat = dataToParse.shift()
         console.log(dat)
+        if(dat.includes("+ERR=")) radioErr = true
         if(dat.includes("#") && (dat.split(",")[2]).startsWith("#")) {
             //Command given
             let temp = ((dat.split("#")[1]).split(",").slice(0,dat.split(",").length-4)).join(",").trim()
             console.log(temp)
             return temp
-        } else {
-            //Rocket state data given
-            let rollRate = dat.split(",")[2]
-            let angle = dat.split(",")[3]
-            let finSetpoint = dat.split(",")[4]
-            let time = dat.split(",")[5]
-            let signalStrength = dat.split(",")[6]
-    
-            //console.log(`Roll Rate: ${rollRate} | Angle: ${angle} | Fin Setpoint: ${finSetpoint} | Time: ${time} | Signal Strength: ${signalStrength}`)
-            try {
-                if(typeof(rollRate) !== "undefined" && rollRate.includes(".") && angle.includes(".") && finSetpoint.includes(".") && time.includes(".")) {
-                    return dat
-                } else {
-                    return readData() //Read another line if current isnt valid
-                } 
-            } catch(e) {
-                console.log(e)
-            }
         }
     }
 }
@@ -79,6 +64,10 @@ const writeData = (data) => {
             }
         })
     }
+}
+
+const handshake = () => {
+    writeData("#ping")
 }
 
 const getPorts = async() => {
@@ -105,9 +94,15 @@ const end = () => {
     }
 }
 
+const radioStatus = () => {
+    return !radioErr
+}
+
 exports.start = start
 exports.readData = readData
 exports.writeData = writeData
 exports.getPorts = getPorts
 exports.setPort = setPort
+exports.handshake = handshake
 exports.end = end
+exports.status = radioStatus
